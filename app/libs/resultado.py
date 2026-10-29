@@ -7,7 +7,7 @@ class Resultado:
     X: float = 0.0
 
     def __post_init__(self):
-        self.X = self.P - 1.0
+        self.X = round(self.P - 1.0, 4)
 
     def __str__(self) -> str:
         return f"{self.P}, {self.sequencia}"

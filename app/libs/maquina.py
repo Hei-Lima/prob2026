@@ -2,21 +2,21 @@ import random
 from libs.resultado import Resultado
 
 class Maquina:
-    def __init__(self, seed: int):
-        random.seed(seed)
+    def __init__(self, seed: int | None = None, premios: dict[str, float] | None = None):
+        if seed is not None:
+            random.seed(seed)
         self._opcoes = ['A', 'B', 'C', 'D', 'E']
-        self._premios = {'A': 5, 'B': 10, 'C': 15, 'D': 25, 'E': 50}
+        self._premios = premios if premios is not None else {'A': 5, 'B': 10, 'C': 15, 'D': 25, 'E': 50}
 
-    def rodar(self):
+    def rodar(self) -> Resultado:
         m = self.gerar_matriz()
         P = self.estimar_premio(m)
         sequencia = [self._opcoes[m[1][0]], self._opcoes[m[1][1]], self._opcoes[m[1][2]]]
 
         res = Resultado(P, sequencia)
-        
         return res
 
-    def gerar_matriz(self):
+    def gerar_matriz(self) -> list[list[int]]:
         t = len(self._opcoes) - 1
         x = random.randint(0, t)
         y = random.randint(0, t)
@@ -29,7 +29,7 @@ class Maquina:
 
         return [l1, l2, l3]
 
-    def estimar_premio(self, m:list[list[int]]) -> int:
+    def estimar_premio(self, m: list[list[int]]) -> float | int:
         l = m[1]
 
         if l[0] == l[1] == l[2]:

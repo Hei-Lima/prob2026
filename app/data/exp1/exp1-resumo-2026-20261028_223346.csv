@@ -1,0 +1,18 @@
+linha_central,lucro_X,prob_teorica,contagem_obs,freq_relativa_obs
+A-A-A,4.0,"1/125 (0,80%)",77,0.7700%
+B-B-B,9.0,"1/125 (0,80%)",88,0.8800%
+C-C-C,14.0,"1/125 (0,80%)",78,0.7800%
+D-D-D,24.0,"1/125 (0,80%)",88,0.8800%
+E-E-E,49.0,"1/125 (0,80%)",81,0.8100%
+Sem Prêmio,-1.0,"120/125 (96,00%)",9588,95.8800%
+
+metrica,valor
+total_rodadas,10000
+lucro_medio_obs (X_barra),-0.1315 créditos
+lucro_medio_teorico (E[X]),-0.1600 créditos
+rtp_obs,86.85%
+rtp_teorico,84.00%
+prop_rodadas_premiadas_obs,4.12%
+prop_rodadas_premiadas_teorica,4.00%
+desvio_padrao_amostral (s),5.2750 créditos
+desvio_padrao_teorico (sigma),5.2052 créditos
