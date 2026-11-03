@@ -716,38 +716,28 @@ body {
   color: var(--text-muted);
 }
 
-.bet-stepper-control {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.bet-fixed-badge {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  background: #fdf2f8;
+  border: 2px solid #fbcfe8;
+  border-radius: 20px;
+  padding: 2px 12px;
   margin-top: 2px;
 }
 
-.stepper-arrow-btn {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: none;
-  background: #8b5cf6;
-  color: #ffffff;
-  font-size: 1.2rem;
-  font-weight: 800;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: transform 0.15s;
-}
-
-.stepper-arrow-btn:hover {
-  transform: scale(1.1);
-  background: #7c3aed;
-}
-
-.stepper-bet-value {
+.bet-fixed-num {
   font-size: 1.45rem;
   font-weight: 800;
   color: var(--deep-purple);
+  line-height: 1.1;
+}
+
+.bet-fixed-unit {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--dark-pink);
 }
 
 /* BOTÃO GIRAR (GRANDE, VERDE E ARREDONDADO) */

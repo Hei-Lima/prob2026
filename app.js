@@ -27,6 +27,25 @@ const BUNNY_QUOTES = [
   "Aposta que a sorte vem!"
 ];
 
+// Frases satíricas para vitórias no 10x instantâneo
+const WIN_10X_PHRASES = [
+  (w, p, net) => `⚡ <strong>10x em 0.05s!</strong> ${w} vitória(s) relâmpago! Faturou <strong>+${p} moedas</strong> (Lucro Líquido: ${net >= 0 ? '+' + net : net})! O berçário tá em festa! 🍼🎉`,
+  (w, p, net) => `⚡ <strong>Leite Ninho no atacado!</strong> ${w} acerto(s) instantâneo(s) (+${p} moedas)! Mamãe nem viu onde foi parar a mesada! 👶✨`,
+  (w, p, net) => `⚡ <strong>Day trade no berço!</strong> O pequeno apostador faturou <strong>+${p} moedas</strong> em alta frequência! 📈👑`,
+  (w, p, net) => `⚡ <strong>O algoritmo da Bebêt engasgou!</strong> ${w} acertos de uma vez só (+${p} moedas)! A sorte sorriu pro neném! 🚀`,
+  (w, p, net) => `⚡ <strong>Pediatra aprovou a dopamina!</strong> ${w} acerto(s) rápidos e +${p} moedas no cofrinho infantil! 🎈`
+];
+
+// Frases satíricas para derrotas no 10x instantâneo
+const LOSS_10X_PHRASES = [
+  (spins) => `⚡ <strong>10 giros e 10 derrotas em 0.02s!</strong> A velocidade da ruína agora é quântica (-${spins} moedas)! 📉💸`,
+  (spins) => `⚡ <strong>Speedrun de falência!</strong> O leitinho evaporou em menos de 1 segundo (-${spins} moedas). O Itaú Kids já tá de olho! 🍼💔`,
+  (spins) => `⚡ <strong>0 vitórias em ${spins} giros!</strong> Não desista, 99% dos bebês param antes da grande bolada! 👶🚀`,
+  (spins) => `⚡ <strong>Chupeta penhorada em alta velocidade!</strong> A Bebêt abocanhou -${spins} moedas num piscar de olhos! 🏦`,
+  (spins) => `⚡ <strong>A Lei dos Grandes Números mandou lembranças!</strong> 10 derrotas instantâneas (-${spins} moedas). A casa sempre vence! 📊`,
+  (spins) => `⚡ <strong>A mesada foi de arrasta pra cima!</strong> -${spins} moedas em tempo recorde! Quer um empréstimo com juros de 67%? 🧡`
+];
+
 // Estado da sessão
 const state = {
   balance: 100,
@@ -565,12 +584,14 @@ function handleInstant10x() {
 
   if (batchWins > 0) {
     msgEl.className = 'round-status-pill win';
-    msgEl.innerHTML = `⚡ <strong>10x Instantâneo!</strong> ${batchWins} vitória(s), faturou +${batchPaid} moedas (Lucro Líquido: ${netBatchProfit >= 0 ? '+' + netBatchProfit : netBatchProfit}).`;
+    const pick = WIN_10X_PHRASES[Math.floor(Math.random() * WIN_10X_PHRASES.length)];
+    msgEl.innerHTML = pick(batchWins, batchPaid, netBatchProfit);
     sounds.playYay();
     triggerWinConfetti();
   } else {
     msgEl.className = 'round-status-pill loss';
-    msgEl.innerHTML = `⚡ <strong>10x Instantâneo!</strong> 0 vitórias em ${spinsToRun} giros (-${spinsToRun} moedas). A casa sempre vence!`;
+    const pick = LOSS_10X_PHRASES[Math.floor(Math.random() * LOSS_10X_PHRASES.length)];
+    msgEl.innerHTML = pick(spinsToRun);
     sounds.playSad();
   }
 
@@ -651,15 +672,6 @@ document.addEventListener('DOMContentLoaded', () => {
     handleInstant10x();
   });
 
-  // Setas de aposta (informativas)
-  const notifyFixedBet = () => {
-    const msgEl = document.getElementById('round-message');
-    msgEl.className = 'round-status-pill neutral';
-    msgEl.textContent = 'Aposta fixa de 1 moeda por giro (conforme modelo acadêmico RTP 84%).';
-  };
-  document.getElementById('btn-bet-minus').addEventListener('click', notifyFixedBet);
-  document.getElementById('btn-bet-plus').addEventListener('click', notifyFixedBet);
-
   // Controle de som (engrenagem ou ícone de som)
   document.getElementById('btn-sound').addEventListener('click', () => {
     sounds.toggleSound();
@@ -684,10 +696,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('menu-jogos').addEventListener('click', () => {
     labModal.classList.add('hidden');
-  });
-
-  document.getElementById('menu-recompensas').addEventListener('click', () => {
-    showItauLoanModal();
   });
 
   document.getElementById('menu-itau').addEventListener('click', () => {
