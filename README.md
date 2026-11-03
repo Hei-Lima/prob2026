@@ -13,7 +13,7 @@ Simulador acadêmico de máquina de apostas (créditos fictícios) e scripts de 
 ### 1. Clonar o repositório
 ```bash
 git clone https://github.com/hei-lima/prob2026.git
-cd prob2026/prob2026/app
+cd prob2026/app
 ```
 
 ### 2. Executar o programa
