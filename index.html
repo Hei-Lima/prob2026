@@ -11,30 +11,24 @@
   
   <link rel="stylesheet" href="style.css">
   
-  <!-- Chart.js para o gráfico de trajetória do saldo -->
+  <!-- Chart.js para o gráfico de trajetória do saldo no Laboratório -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Canvas Confetti para efeitos de comemoração -->
+  <!-- Canvas Confetti para comemorações -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
 
-  <!-- ELEMENTOS DE ÁUDIO EXTERNOS -->
+  <!-- ELEMENTOS DE ÁUDIO -->
   <audio id="bgm-audio" src="media/bgm.mp3" loop preload="auto"></audio>
   <audio id="yay-audio" src="media/yay.mp3" preload="auto"></audio>
+  <audio id="sad-audio" src="media/sad.mp3" preload="auto"></audio>
 
-  <!-- CENÁRIO DE FUNDO: CÉU, ARCO-ÍRIS, NUVENS E COLINAS PASTEL -->
-  <div class="sky-background">
-    <div class="rainbow-arc"></div>
-    <div class="cloud cloud-1"></div>
-    <div class="cloud cloud-2"></div>
-    <div class="cloud cloud-3"></div>
-    <div class="star-decor star-d1">⭐</div>
-    <div class="star-decor star-d2">⭐</div>
-    <div class="star-decor star-d3">⭐</div>
-    <div class="star-decor star-d4">⭐</div>
-    <div class="star-decor star-d5">⭐</div>
-    <div class="hills-backdrop"></div>
-  </div>
+  <!-- ESTRELAS DECORATIVAS FLUTUANTES NO CENÁRIO -->
+  <div class="scenery-star star-pos-1">⭐</div>
+  <div class="scenery-star star-pos-2">⭐</div>
+  <div class="scenery-star star-pos-3">⭐</div>
+  <div class="scenery-star star-pos-4">⭐</div>
+  <div class="scenery-star star-pos-5">⭐</div>
 
   <!-- MODAL / TELA DE INTRODUÇÃO SATÍRICA -->
   <div id="intro-modal" class="modal-overlay">
@@ -81,7 +75,7 @@
     </div>
   </div>
 
-  <!-- MODAL / DRAWER DO LABORATÓRIO DA RUÍNA (MÉTRICAS MATEMÁTICAS & CHART) -->
+  <!-- MODAL DO LABORATÓRIO DA RUÍNA (CHART & ESTATÍSTICAS IFES) -->
   <div id="lab-modal" class="modal-overlay hidden">
     <div class="modal-card lab-card">
       <div class="lab-header">
@@ -141,218 +135,282 @@
     </div>
   </div>
 
-  <!-- CONTAINER PRINCIPAL DO APP (ESTILO TABLET / CONSOLE INFANTIL) -->
-  <div class="app-window">
+  <!-- APLICAÇÃO PRINCIPAL INTEGRADA AO CENÁRIO -->
+  <div class="game-viewport">
     
-    <!-- BARRA SUPERIOR (HEADER) -->
-    <header class="top-nav-bar">
+    <!-- BARRA SUPERIOR (HEADER INTEGRADO) -->
+    <header class="top-header-bar">
       <!-- LOGO BEBÊT -->
-      <div class="brand-container">
-        <img src="media/bebet.png" alt="Bebêt - A Bet Para Bebês" class="nav-brand-logo">
+      <div class="header-logo-area">
+        <img src="media/bebet.png" alt="Bebêt" class="bebet-logo-img">
       </div>
 
-      <!-- STATUS CENTRAL: SALDO DO JOGADOR & LUCRO DA CASA -->
-      <div class="header-pills-row">
-        <div class="hud-pill balance-hud">
-          <div class="hud-coin">🪙</div>
-          <div class="hud-text-group">
-            <span class="hud-label">Seu saldo</span>
-            <span id="player-balance" class="hud-value">100</span>
+      <!-- HUD CENTRAL: SEU SALDO & LUCRO BEBÊT -->
+      <div class="header-hud-center">
+        <div class="coin-hud-pill">
+          <div class="coin-circle">
+            <span class="coin-star">★</span>
+          </div>
+          <div class="coin-hud-labels">
+            <span class="hud-mini-label">Seu saldo</span>
+            <span id="player-balance" class="hud-main-num">100</span>
           </div>
         </div>
 
-        <div class="hud-pill profit-hud">
-          <div class="hud-coin">🏦</div>
-          <div class="hud-text-group">
-            <span class="hud-label">Lucro Bebêt</span>
-            <span id="casino-profit" class="hud-value casino-color">+0</span>
+        <div class="coin-hud-pill casino-profit-pill">
+          <div class="coin-circle casino-circle">
+            <span>🏦</span>
+          </div>
+          <div class="coin-hud-labels">
+            <span class="hud-mini-label">Lucro Bebêt</span>
+            <span id="casino-profit" class="hud-main-num casino-num">+0</span>
           </div>
         </div>
       </div>
 
-      <!-- PERFIL DO BEBÊ & CONTROLES -->
-      <div class="header-right-group">
-        <div class="baby-profile-card">
-          <div class="baby-avatar">👶👑</div>
-          <div class="baby-info">
-            <span class="baby-name">Pequeno Apostador</span>
-            <div class="baby-bar-wrap">
-              <span class="baby-level-txt">Nível 1 (Ruína)</span>
-              <div class="baby-progress-track">
-                <div class="baby-progress-fill" style="width: 25%;"></div>
+      <!-- LADO DIREITO: PERFIL PEQUENA JOGADORA + CONFIGURAÇÕES + HOME -->
+      <div class="header-right-tools">
+        <div class="player-profile-badge">
+          <div class="player-avatar-circle">
+            <span class="avatar-crown">👑</span>
+            <span class="avatar-baby">👧</span>
+          </div>
+          <div class="player-profile-info">
+            <span class="player-title">Pequena Jogadora</span>
+            <div class="player-bar-container">
+              <span class="player-level-text">Nível 1</span>
+              <div class="player-level-track">
+                <div class="player-level-fill" style="width: 30%;"></div>
               </div>
             </div>
           </div>
         </div>
 
-        <button id="btn-sound" class="btn-round-nav" title="Ligar/Desligar Música e Efeitos">
-          <span id="sound-icon">🔊</span>
+        <button id="btn-sound" class="btn-round-tool" title="Ligar/Desligar Música e Sons">
+          <span id="sound-icon">⚙️</span>
         </button>
 
-        <button id="btn-home" class="btn-round-nav" title="Sobre a Bebêt">
+        <button id="btn-home" class="btn-round-tool" title="Início / Manifesto Satírico">
           <span>🏠</span>
         </button>
       </div>
     </header>
 
-    <!-- CORPO DO APP: SIDEBAR + MESA PRINCIPAL DE JOGO -->
-    <div class="app-body-layout">
+    <!-- PALCO DO JOGO: SIDEBAR + MESA PRINCIPAL DE JOGO -->
+    <div class="game-stage-layout">
       
-      <!-- SIDEBAR LATERAL ESQUERDA -->
-      <aside class="sidebar-panel">
-        <nav class="side-menu">
-          <button class="nav-item active" id="menu-jogos">
-            <span class="nav-icon">🎮</span>
-            <span class="nav-text">Jogos</span>
+      <!-- BARRA LATERAL ESQUERDA -->
+      <aside class="left-sidebar-area">
+        <nav class="sidebar-menu-card">
+          <button class="side-btn" id="menu-inicio">
+            <span class="side-icon">🏠</span>
+            <span class="side-text">Início</span>
           </button>
-          <button class="nav-item" id="menu-lab">
-            <span class="nav-icon">📊</span>
-            <span class="nav-text">Laboratório</span>
+          <button class="side-btn active" id="menu-jogos">
+            <span class="side-icon">🎮</span>
+            <span class="side-text">Jogos</span>
           </button>
-          <button class="nav-item" id="menu-itau">
-            <span class="nav-icon">🧡</span>
-            <span class="nav-text">Itaú Kids</span>
+          <button class="side-btn" id="menu-recompensas">
+            <span class="side-icon">🎁</span>
+            <span class="side-text">Recompensas</span>
           </button>
-          <button class="nav-item" id="menu-sobre">
-            <span class="nav-icon">🍼</span>
-            <span class="nav-text">Manifesto</span>
+          <button class="side-btn" id="menu-itau">
+            <span class="side-icon">⭐</span>
+            <span class="side-text">Itaú Kids</span>
+          </button>
+          <button class="side-btn" id="menu-lab">
+            <span class="side-icon">📑</span>
+            <span class="side-text">Histórico / Lab</span>
           </button>
         </nav>
 
-        <!-- MASCOTE COELHINHO COM BALÃO DE FALA -->
-        <div class="bunny-mascot-container">
-          <div class="bunny-bubble" id="bunny-quote">Boa sorte! 💕</div>
-          <div class="bunny-illustration">
-            <div class="bunny-ears">
-              <div class="ear ear-left"><div class="ear-inner"></div></div>
-              <div class="ear ear-right"><div class="ear-inner"></div></div>
-            </div>
-            <div class="bunny-face">
-              <div class="bunny-eye eye-left"></div>
-              <div class="bunny-eye eye-right"></div>
-              <div class="bunny-nose"></div>
-              <div class="bunny-cheeks">
-                <div class="cheek cheek-l"></div>
-                <div class="cheek cheek-r"></div>
-              </div>
-            </div>
-            <div class="bunny-star-held">⭐</div>
+        <!-- MASCOTE COELHINHO NO CANTO INFERIOR ESQUERDO (FIEL À IMAGEM 1) -->
+        <div class="mascot-bunny-wrapper">
+          <div class="mascot-speech-bubble" id="bunny-bubble">
+            Boa sorte! 💕
+          </div>
+          <div class="bunny-svg-box">
+            <!-- Ilustração 2D vetorial fiel ao coelhinho da referência -->
+            <svg viewBox="0 0 160 180" class="bunny-vector" xmlns="http://www.w3.org/2000/svg">
+              <!-- Nuvens na base -->
+              <ellipse cx="80" cy="172" rx="75" ry="16" fill="#ffffff" opacity="0.95"/>
+              <ellipse cx="40" cy="168" rx="35" ry="14" fill="#ffffff" opacity="0.9"/>
+              <ellipse cx="120" cy="168" rx="35" ry="14" fill="#ffffff" opacity="0.9"/>
+
+              <!-- Orelha Esquerda -->
+              <path d="M 46,75 C 32,30 42,6 58,10 C 72,14 66,45 60,75 Z" fill="#ffffff" stroke="#c7d2fe" stroke-width="3"/>
+              <path d="M 50,68 C 42,35 48,16 57,18 C 65,20 62,42 58,68 Z" fill="#fbcfe8"/>
+
+              <!-- Orelha Direita -->
+              <path d="M 114,75 C 128,30 118,6 102,10 C 88,14 94,45 100,75 Z" fill="#ffffff" stroke="#c7d2fe" stroke-width="3"/>
+              <path d="M 110,68 C 118,35 112,16 103,18 C 95,20 98,42 102,68 Z" fill="#fbcfe8"/>
+
+              <!-- Corpo do Coelhinho -->
+              <ellipse cx="80" cy="125" rx="46" ry="42" fill="#ffffff" stroke="#c7d2fe" stroke-width="3"/>
+
+              <!-- Cabeça Chibi -->
+              <circle cx="80" cy="78" r="42" fill="#ffffff" stroke="#c7d2fe" stroke-width="3"/>
+
+              <!-- Olhos Fofos com Brilho -->
+              <ellipse cx="64" cy="74" rx="5.5" ry="7.5" fill="#1e1b4b"/>
+              <circle cx="62" cy="71" r="2.5" fill="#ffffff"/>
+              <circle cx="66" cy="77" r="1.2" fill="#ffffff"/>
+
+              <ellipse cx="96" cy="74" rx="5.5" ry="7.5" fill="#1e1b4b"/>
+              <circle cx="94" cy="71" r="2.5" fill="#ffffff"/>
+              <circle cx="98" cy="77" r="1.2" fill="#ffffff"/>
+
+              <!-- Narizinho & Boquinha -->
+              <path d="M 77,83 Q 80,81 83,83 Q 80,86 77,83 Z" fill="#f472b6"/>
+              <path d="M 76,87 Q 80,91 84,87" fill="none" stroke="#1e1b4b" stroke-width="2" stroke-linecap="round"/>
+
+              <!-- Bochechas Rosadas -->
+              <ellipse cx="52" cy="85" rx="7" ry="4.5" fill="#fbcfe8" opacity="0.9"/>
+              <ellipse cx="108" cy="85" rx="7" ry="4.5" fill="#fbcfe8" opacity="0.9"/>
+
+              <!-- Patinhas Traseiras -->
+              <ellipse cx="50" cy="155" rx="15" ry="9" fill="#ffffff" stroke="#c7d2fe" stroke-width="2.5"/>
+              <ellipse cx="110" cy="155" rx="15" ry="9" fill="#ffffff" stroke="#c7d2fe" stroke-width="2.5"/>
+
+              <!-- Patinhas Dianteiras segurando a Estrela -->
+              <ellipse cx="62" cy="122" rx="9" ry="7" fill="#ffffff" stroke="#c7d2fe" stroke-width="2"/>
+              <ellipse cx="98" cy="122" rx="9" ry="7" fill="#ffffff" stroke="#c7d2fe" stroke-width="2"/>
+
+              <!-- A Grande Estrela Dourada que o coelhinho segura -->
+              <g transform="translate(80, 122) scale(0.95)">
+                <!-- Sombra da estrela -->
+                <polygon points="0,-26 7,-8 26,-8 11,4 16,22 0,11 -16,22 -11,4 -26,-8 -7,-8" fill="#ca8a04" opacity="0.3" transform="translate(1, 2)"/>
+                <!-- Corpo da estrela dourada com gradiente -->
+                <polygon points="0,-26 7,-8 26,-8 11,4 16,22 0,11 -16,22 -11,4 -26,-8 -7,-8" fill="#facc15" stroke="#ffffff" stroke-width="2.5" stroke-linejoin="round"/>
+                <polygon points="0,-23 5,-7 22,-7 9,3 13,18 0,9 -13,18 -9,3 -22,-7 -5,-7" fill="#fde047"/>
+                <!-- Brilho no topo da estrela -->
+                <ellipse cx="-4" cy="-12" rx="4" ry="2" fill="#ffffff" opacity="0.8" transform="rotate(-30)"/>
+              </g>
+            </svg>
           </div>
         </div>
       </aside>
 
-      <!-- ÁREA CENTRAL DO JOGO -->
-      <main class="game-board-area">
+      <!-- ÁREA CENTRAL INTEGRADA (PALCO PRINCIPAL) -->
+      <main class="main-stage-panel">
         
-        <!-- TÍTULO DA MÁQUINA ESTILO PÍLULA ROXA -->
-        <div class="game-title-pill">
-          <span class="title-star">⭐</span>
-          <div class="title-texts">
-            <h1>Caça-Níqueis</h1>
-            <p>Gire os rolos e tente ganhar!</p>
+        <!-- PLACA ROXA ARREDONDADA COM TÍTULO CAÇA-NÍQUEIS -->
+        <div class="slot-title-cloud-plaque">
+          <span class="plaque-star-left">⭐</span>
+          <div class="plaque-text-block">
+            <h1 class="plaque-heading">Caça-Níqueis</h1>
+            <p class="plaque-subheading">Gire os rolos e tente ganhar!</p>
           </div>
-          <span class="title-star">⭐</span>
+          <span class="plaque-star-right">⭐</span>
         </div>
 
-        <!-- MÁQUINA DE CAÇA-NÍQUEIS + ALAVANCA MECÂNICA + PAINEL DE CONTROLE -->
-        <div class="machine-and-controls-grid">
+        <!-- MÁQUINA + PAINEL DE CONTROLE À DIREITA -->
+        <div class="machine-and-panel-row">
           
-          <!-- O GABINETE DA MÁQUINA ROSA (MINIWIN STYLE) -->
-          <div class="machine-housing-card">
+          <!-- GABINETE DA MÁQUINA DE CAÇA-NÍQUEIS (ROSA / MAGENTA FIEL À REFERÊNCIA) -->
+          <div class="slot-cabinet-housing">
             
             <!-- COROA DOURADA SUPERIOR COM CRISTAIS -->
-            <div class="machine-golden-crown">
-              <span class="crown-jewel cj-1">✨</span>
-              <span class="crown-symbol">👑</span>
-              <span class="crown-jewel cj-2">✨</span>
+            <div class="cabinet-golden-crown">
+              <span class="crown-jewel-star">✨</span>
+              <span class="crown-svg-icon">👑</span>
+              <span class="crown-jewel-star">✨</span>
             </div>
 
-            <!-- QUADRO DOS ROLOS 3x3 -->
-            <div class="machine-screen-bezel">
+            <!-- 4 ESTRELINHAS DOURADAS DECORATIVAS NOS CANTOS DA MÁQUINA -->
+            <div class="cabinet-star-corner c-top-left">⭐</div>
+            <div class="cabinet-star-corner c-top-right">⭐</div>
+            <div class="cabinet-star-corner c-bot-left">⭐</div>
+            <div class="cabinet-star-corner c-bot-right">⭐</div>
+
+            <!-- TELA INTERNA DOS ROLOS (FUNDO CREME COM BORDAS ROXAS) -->
+            <div class="cabinet-screen-viewport">
               
-              <!-- INDICADORES DA LINHA CENTRAL (PAYLINE) -->
-              <div class="payline-bracket bracket-left">👉</div>
-
-              <div class="reels-viewport">
-                <!-- Rolo 1 -->
-                <div class="reel-column" id="reel-1">
-                  <div class="reel-cell top-row" id="r1-top"><div class="sym-box">⭐</div></div>
-                  <div class="reel-cell mid-row" id="r1-mid"><div class="sym-box">🍒</div></div>
-                  <div class="reel-cell bot-row" id="r1-bot"><div class="sym-box">💎</div></div>
+              <div class="reels-tracks-container">
+                <!-- ROLO 1 -->
+                <div class="reel-track" id="reel-1">
+                  <div class="symbol-cell top-slot" id="r1-top"><div class="slot-symbol">⭐</div></div>
+                  <div class="symbol-cell center-slot" id="r1-mid"><div class="slot-symbol">🍒</div></div>
+                  <div class="symbol-cell bottom-slot" id="r1-bot"><div class="slot-symbol">💎</div></div>
                 </div>
 
-                <!-- Divisória suave -->
-                <div class="reel-separator"></div>
+                <!-- DIVISÓRIA ROXA SUAVE -->
+                <div class="reel-divider-line"></div>
 
-                <!-- Rolo 2 -->
-                <div class="reel-column" id="reel-2">
-                  <div class="reel-cell top-row" id="r2-top"><div class="sym-box">🧸</div></div>
-                  <div class="reel-cell mid-row" id="r2-mid"><div class="sym-box">🍒</div></div>
-                  <div class="reel-cell bot-row" id="r2-bot"><div class="sym-box">👑</div></div>
+                <!-- ROLO 2 -->
+                <div class="reel-track" id="reel-2">
+                  <div class="symbol-cell top-slot" id="r2-top"><div class="slot-symbol">🧸</div></div>
+                  <div class="symbol-cell center-slot" id="r2-mid"><div class="slot-symbol">🍒</div></div>
+                  <div class="symbol-cell bottom-slot" id="r2-bot"><div class="slot-symbol">👑</div></div>
                 </div>
 
-                <!-- Divisória suave -->
-                <div class="reel-separator"></div>
+                <!-- DIVISÓRIA ROXA SUAVE -->
+                <div class="reel-divider-line"></div>
 
-                <!-- Rolo 3 -->
-                <div class="reel-column" id="reel-3">
-                  <div class="reel-cell top-row" id="r3-top"><div class="sym-box">⭐</div></div>
-                  <div class="reel-cell mid-row" id="r3-mid"><div class="sym-box">🍒</div></div>
-                  <div class="reel-cell bot-row" id="r3-bot"><div class="sym-box">🍓</div></div>
+                <!-- ROLO 3 -->
+                <div class="reel-track" id="reel-3">
+                  <div class="symbol-cell top-slot" id="r3-top"><div class="slot-symbol">⭐</div></div>
+                  <div class="symbol-cell center-slot" id="r3-mid"><div class="slot-symbol">🍒</div></div>
+                  <div class="symbol-cell bottom-slot" id="r3-bot"><div class="slot-symbol">🍓</div></div>
                 </div>
               </div>
 
-              <div class="payline-bracket bracket-right">👈</div>
             </div>
 
-            <!-- ALAVANCA FÍSICA LATERAL COM BOLA ROSA -->
-            <div class="slot-lever-assembly" id="slot-lever" title="Puxe a alavanca!">
-              <div class="lever-pivot"></div>
-              <div class="lever-rod"></div>
-              <div class="lever-knob"></div>
+            <!-- ALAVANCA LATERAL COM BOLA ROSA -->
+            <div class="cabinet-lever-assembly" id="slot-lever" title="Puxe a alavanca!">
+              <div class="lever-pivot-base"></div>
+              <div class="lever-arm-rod"></div>
+              <div class="lever-pink-ball"></div>
             </div>
 
           </div>
 
-          <!-- PAINEL LATERAL DE APOSTA & BOTÃO GIRAR -->
-          <div class="side-controls-column">
+          <!-- PAINEL DE APOSTA À DIREITA (FIEL À IMAGEM 1) -->
+          <div class="right-bet-sidepanel">
             
-            <div class="bet-action-card">
-              <!-- VALOR DA APOSTA FIXA -->
-              <div class="bet-amount-box">
-                <div class="bet-coin-icon">🪙</div>
-                <div class="bet-details">
-                  <span class="bet-title">Aposta</span>
-                  <div class="bet-selector-row">
-                    <span class="bet-arrow-btn">‹</span>
-                    <span class="bet-num">1</span>
-                    <span class="bet-arrow-btn">›</span>
+            <!-- CARTÃO DE APOSTA & BOTÃO GIRAR -->
+            <div class="bet-control-whitecard">
+              
+              <!-- APOSTA CENTRALIZADA -->
+              <div class="bet-header-group">
+                <div class="bet-golden-coin">
+                  <span class="coin-inner-star">★</span>
+                </div>
+                <div class="bet-text-column">
+                  <span class="bet-word">Aposta</span>
+                  <div class="bet-stepper-control">
+                    <button class="stepper-arrow-btn" id="btn-bet-minus">‹</button>
+                    <span class="stepper-bet-value" id="current-bet-display">1</span>
+                    <button class="stepper-arrow-btn" id="btn-bet-plus">›</button>
                   </div>
                 </div>
               </div>
 
-              <!-- BOTÃO GIRAR (VERDE JUCY 3D) -->
-              <button id="btn-spin" class="btn-spin-large">
-                <span class="btn-play-icon">▶</span>
-                <span class="btn-spin-label">Girar</span>
+              <!-- BOTÃO GIRAR GRANDE, VERDE E ARREDONDADO -->
+              <button id="btn-spin" class="btn-spin-green">
+                <span class="play-triangle-icon">▶</span>
+                <span class="spin-label-text">Girar</span>
               </button>
 
-              <!-- MODO AUTO -->
-              <button id="btn-auto" class="btn-auto-fast">
-                ⚡ Auto (10x)
+              <!-- BOTÃO DE APOSTA 10X INSTANTÂNEA (PEDIDO EXPRESSO DO USUÁRIO) -->
+              <button id="btn-auto-instant" class="btn-instant-10x" title="Gira 10 rodadas instantaneamente em 1 clique!">
+                ⚡ 10x Instantâneo
               </button>
             </div>
 
-            <!-- MINI CARD "COMO FUNCIONA?" -->
-            <div class="info-help-card">
-              <div class="info-help-header">
-                <span class="info-icon">💡</span>
+            <!-- CARTÃO EXPLICATIVO "COMO FUNCIONA?" -->
+            <div class="help-info-whitecard">
+              <div class="help-card-header">
+                <span class="bulb-icon">💡</span>
                 <strong>Como funciona?</strong>
               </div>
-              <p>Gire os rolos e tente combinar <strong>3 símbolos iguais</strong> na linha do meio para ganhar moedas!</p>
-              <div class="quick-stat-bar">
-                <span>RTP: <strong id="quick-rtp">0%</strong></span>
-                <span>Rodadas: <strong id="quick-rounds">0</strong></span>
+              <p class="help-card-text">
+                Gire os rolos e tente combinar <strong>3 símbolos iguais</strong> na linha do meio para ganhar moedas!
+              </p>
+              <div class="help-stats-mini">
+                <span>RTP: <strong id="mini-rtp">0.0%</strong></span>
+                <span>Giros: <strong id="mini-rounds">0</strong></span>
               </div>
             </div>
 
@@ -360,59 +418,59 @@
 
         </div>
 
-        <!-- MENSAGEM DINÂMICA DA RODADA -->
-        <div id="round-message" class="round-status-banner neutral">
-          Aperte em <strong>Girar</strong> para arriscar 1 crédito! 🍼🎲
+        <!-- MENSAGEM DINÂMICA DE STATUS DA RODADA -->
+        <div id="round-message" class="round-status-pill neutral">
+          Gire os rolos e tente não perder a mesada! 🍼🎲
         </div>
 
-        <!-- PRÊMIOS POSSÍVEIS (CARD INFERIOR SEGUINDO A REFERÊNCIA) -->
-        <section class="payout-showcase-card">
-          <div class="showcase-header">
-            <span class="showcase-star">⭐</span>
-            <span class="showcase-title">Prêmios possíveis (Linha Central)</span>
-            <span class="showcase-star">⭐</span>
+        <!-- PAINEL DE PRÊMIOS NA PARTE INFERIOR (FIEL À REFERÊNCIA) -->
+        <div class="prizes-horizontal-card">
+          <div class="prizes-card-title">
+            <span class="p-star">⭐</span>
+            <span>Prêmios possíveis</span>
+            <span class="p-star">⭐</span>
           </div>
 
-          <div class="prizes-horizontal-row">
-            <div class="prize-slot">
-              <div class="prize-symbol-art">⭐</div>
-              <span class="prize-coins">5 moedas</span>
-              <small class="prize-math">(Lucro +4)</small>
+          <div class="prizes-items-row">
+            <div class="prize-column-item">
+              <div class="prize-symbol-large">⭐</div>
+              <span class="prize-coins-label">5 moedas</span>
+              <small class="prize-lucro-tag">(Lucro +4)</small>
             </div>
 
-            <div class="prize-slot">
-              <div class="prize-symbol-art">🍒</div>
-              <span class="prize-coins">10 moedas</span>
-              <small class="prize-math">(Lucro +9)</small>
+            <div class="prize-column-item">
+              <div class="prize-symbol-large">🍒</div>
+              <span class="prize-coins-label">10 moedas</span>
+              <small class="prize-lucro-tag">(Lucro +9)</small>
             </div>
 
-            <div class="prize-slot">
-              <div class="prize-symbol-art">💎</div>
-              <span class="prize-coins">15 moedas</span>
-              <small class="prize-math">(Lucro +14)</small>
+            <div class="prize-column-item">
+              <div class="prize-symbol-large">💎</div>
+              <span class="prize-coins-label">15 moedas</span>
+              <small class="prize-lucro-tag">(Lucro +14)</small>
             </div>
 
-            <div class="prize-slot">
-              <div class="prize-symbol-art">🧸</div>
-              <span class="prize-coins">25 moedas</span>
-              <small class="prize-math">(Lucro +24)</small>
+            <div class="prize-column-item">
+              <div class="prize-symbol-large">🧸</div>
+              <span class="prize-coins-label">25 moedas</span>
+              <small class="prize-lucro-tag">(Lucro +24)</small>
             </div>
 
-            <div class="prize-slot jackpot-slot">
-              <div class="prize-symbol-art crown-art">👑</div>
-              <span class="prize-coins jackpot-coins">50 moedas</span>
-              <small class="prize-math">(Lucro +49)</small>
+            <div class="prize-column-item jackpot-column">
+              <div class="prize-symbol-large crown-jackpot-art">👑</div>
+              <span class="prize-coins-label jackpot-coins-label">50 moedas</span>
+              <small class="prize-lucro-tag">(Lucro +49)</small>
             </div>
           </div>
-        </section>
+        </div>
 
       </main>
 
     </div>
 
-    <!-- RODAPÉ COMPACTO -->
-    <footer class="app-footer">
-      Bebêt S.A. © 2026 — Simulador estritamente acadêmico (IFES). Nenhum valor financeiro real é apostado.
+    <!-- RODAPÉ SUTIL -->
+    <footer class="game-bottom-footer">
+      Bebêt S.A. © 2026 — Simulador estritamente acadêmico (IFES). Nenhum valor monetário real é apostado.
     </footer>
 
   </div>

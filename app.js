@@ -15,6 +15,7 @@ const SYMBOLS = [
 
 // Frases satíricas do mascote Coelhinho
 const BUNNY_QUOTES = [
+  "Boa sorte! 💕",
   "Mamadeira tá paga! 🍼",
   "Só perde quem desiste! 🚀",
   "O loss fortalece a cognição!",
@@ -22,7 +23,7 @@ const BUNNY_QUOTES = [
   "Chupeta penhorada com sucesso!",
   "Mais uma rodadinha só... 🥺",
   "O berçário inteiro tá torcendo!",
-  "Idade é só um número! 👶",
+  "Idade é apenas um número! 👶",
   "Aposta que a sorte vem!"
 ];
 
@@ -42,17 +43,17 @@ const state = {
   loansTaken: 0,
   totalDebt: 0,
   isSpinning: false,
-  soundEnabled: true,
-  autoSpinning: false
+  soundEnabled: true
 };
 
 // -------------------------------------------------------------
-// SISTEMA DE ÁUDIO COM ASSETS EXTERNOS (BGM & YAY MP3)
+// SISTEMA DE ÁUDIO COM ASSETS EXTERNOS (BGM, YAY E SAD MP3)
 // -------------------------------------------------------------
 class SoundManager {
   constructor() {
     this.bgmAudio = null;
     this.yayAudio = null;
+    this.sadAudio = null;
     this.audioCtx = null;
     this.initialized = false;
   }
@@ -62,12 +63,16 @@ class SoundManager {
 
     this.bgmAudio = document.getElementById('bgm-audio');
     this.yayAudio = document.getElementById('yay-audio');
+    this.sadAudio = document.getElementById('sad-audio');
 
     if (this.bgmAudio) {
-      this.bgmAudio.volume = 0.30; // Volume agradável de fundo
+      this.bgmAudio.volume = 0.28;
     }
     if (this.yayAudio) {
       this.yayAudio.volume = 0.65;
+    }
+    if (this.sadAudio) {
+      this.sadAudio.volume = 0.60;
     }
 
     try {
@@ -85,7 +90,7 @@ class SoundManager {
     this.init();
     if (this.bgmAudio) {
       this.bgmAudio.play().catch(e => {
-        console.log("Autoplay bloqueado até interação do usuário:", e);
+        console.log("Autoplay aguardando interação do usuário:", e);
       });
     }
   }
@@ -105,14 +110,23 @@ class SoundManager {
     }
   }
 
-  // Efeito sonoro de clique de roleta mecânica
+  playSad() {
+    if (!state.soundEnabled) return;
+    this.init();
+    if (this.sadAudio) {
+      this.sadAudio.currentTime = 0;
+      this.sadAudio.play().catch(e => console.warn(e));
+    }
+  }
+
+  // Efeito sonoro de clique mecânico da roleta
   playClick() {
     if (!state.soundEnabled || !this.audioCtx) return;
     try {
       const osc = this.audioCtx.createOscillator();
       const gain = this.audioCtx.createGain();
       osc.type = 'triangle';
-      osc.frequency.setValueAtTime(380 + Math.random() * 120, this.audioCtx.currentTime);
+      osc.frequency.setValueAtTime(420 + Math.random() * 100, this.audioCtx.currentTime);
       gain.gain.setValueAtTime(0.06, this.audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.0001, this.audioCtx.currentTime + 0.04);
       osc.connect(gain);
@@ -122,34 +136,7 @@ class SoundManager {
     } catch (e) {}
   }
 
-  // Efeito de perda: cartoon slide descendente fofo
-  playLoss() {
-    if (!state.soundEnabled || !this.audioCtx) return;
-    try {
-      const osc = this.audioCtx.createOscillator();
-      const gain = this.audioCtx.createGain();
-      osc.type = 'sawtooth';
-      const t = this.audioCtx.currentTime;
-      osc.frequency.setValueAtTime(320, t);
-      osc.frequency.exponentialRampToValueAtTime(140, t + 0.28);
-
-      const filter = this.audioCtx.createBiquadFilter();
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(700, t);
-
-      gain.gain.setValueAtTime(0.09, t);
-      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.28);
-
-      osc.connect(filter);
-      filter.connect(gain);
-      gain.connect(this.audioCtx.destination);
-
-      osc.start();
-      osc.stop(t + 0.28);
-    } catch (e) {}
-  }
-
-  // Som de dinheiro / empréstimo aprovado
+  // Som de caixa registradora ao pegar empréstimo
   playCash() {
     if (!state.soundEnabled || !this.audioCtx) return;
     try {
@@ -207,7 +194,7 @@ function initChart() {
       labels: [0],
       datasets: [
         {
-          label: 'Saldo do Bebê (Créditos)',
+          label: 'Saldo do Bebê (Moedas)',
           data: [100],
           borderColor: '#db2777',
           backgroundColor: 'rgba(244, 114, 182, 0.22)',
@@ -244,7 +231,7 @@ function initChart() {
           grid: { display: false }
         },
         y: {
-          title: { display: true, text: 'Créditos', font: { family: 'Fredoka', weight: 'bold' } },
+          title: { display: true, text: 'Moedas', font: { family: 'Fredoka', weight: 'bold' } },
           suggestedMin: 0,
           suggestedMax: 120
         }
@@ -287,7 +274,7 @@ function updateChart() {
 }
 
 // -------------------------------------------------------------
-// LÓGICA DO JOGO (SIMULADOR DO ARTIGO IFES)
+// LÓGICA DO JOGO (MODELO MATEMÁTICO IFES 2026)
 // -------------------------------------------------------------
 
 function spinReels() {
@@ -338,19 +325,19 @@ function evaluatePayout(spinResult) {
 
 function renderReelSymbols(spinResult) {
   // Rolo 1
-  document.getElementById('r1-top').innerHTML = `<div class="sym-box">${spinResult.reel1.top.emoji}</div>`;
-  document.getElementById('r1-mid').innerHTML = `<div class="sym-box">${spinResult.reel1.mid.emoji}</div>`;
-  document.getElementById('r1-bot').innerHTML = `<div class="sym-box">${spinResult.reel1.bot.emoji}</div>`;
+  document.getElementById('r1-top').innerHTML = `<div class="slot-symbol">${spinResult.reel1.top.emoji}</div>`;
+  document.getElementById('r1-mid').innerHTML = `<div class="slot-symbol">${spinResult.reel1.mid.emoji}</div>`;
+  document.getElementById('r1-bot').innerHTML = `<div class="slot-symbol">${spinResult.reel1.bot.emoji}</div>`;
 
   // Rolo 2
-  document.getElementById('r2-top').innerHTML = `<div class="sym-box">${spinResult.reel2.top.emoji}</div>`;
-  document.getElementById('r2-mid').innerHTML = `<div class="sym-box">${spinResult.reel2.mid.emoji}</div>`;
-  document.getElementById('r2-bot').innerHTML = `<div class="sym-box">${spinResult.reel2.bot.emoji}</div>`;
+  document.getElementById('r2-top').innerHTML = `<div class="slot-symbol">${spinResult.reel2.top.emoji}</div>`;
+  document.getElementById('r2-mid').innerHTML = `<div class="slot-symbol">${spinResult.reel2.mid.emoji}</div>`;
+  document.getElementById('r2-bot').innerHTML = `<div class="slot-symbol">${spinResult.reel2.bot.emoji}</div>`;
 
   // Rolo 3
-  document.getElementById('r3-top').innerHTML = `<div class="sym-box">${spinResult.reel3.top.emoji}</div>`;
-  document.getElementById('r3-mid').innerHTML = `<div class="sym-box">${spinResult.reel3.mid.emoji}</div>`;
-  document.getElementById('r3-bot').innerHTML = `<div class="sym-box">${spinResult.reel3.bot.emoji}</div>`;
+  document.getElementById('r3-top').innerHTML = `<div class="slot-symbol">${spinResult.reel3.top.emoji}</div>`;
+  document.getElementById('r3-mid').innerHTML = `<div class="slot-symbol">${spinResult.reel3.mid.emoji}</div>`;
+  document.getElementById('r3-bot').innerHTML = `<div class="slot-symbol">${spinResult.reel3.bot.emoji}</div>`;
 }
 
 function updateStatsUI() {
@@ -360,14 +347,14 @@ function updateStatsUI() {
   const casinoEl = document.getElementById('casino-profit');
   casinoEl.textContent = (casinoProfit >= 0 ? `+${casinoProfit}` : `${casinoProfit}`);
 
-  // Quick stats card
+  // Mini HUD no card de ajuda
   const observedRTP = state.totalBet > 0 ? ((state.totalPaid / state.totalBet) * 100).toFixed(1) : '0.0';
-  const quickRtp = document.getElementById('quick-rtp');
-  if (quickRtp) quickRtp.textContent = `${observedRTP}%`;
-  const quickRounds = document.getElementById('quick-rounds');
-  if (quickRounds) quickRounds.textContent = state.rounds;
+  const miniRtp = document.getElementById('mini-rtp');
+  if (miniRtp) miniRtp.textContent = `${observedRTP}%`;
+  const miniRounds = document.getElementById('mini-rounds');
+  if (miniRounds) miniRounds.textContent = state.rounds;
 
-  // Painel detalhado do Laboratório
+  // Painel detalhado do Laboratório da Ruína
   const elRounds = document.getElementById('m-rounds');
   if (elRounds) elRounds.textContent = state.rounds;
 
@@ -402,24 +389,21 @@ function updateStatsUI() {
 function triggerWinConfetti() {
   if (typeof confetti === 'function') {
     confetti({
-      particleCount: 70,
-      spread: 75,
+      particleCount: 80,
+      spread: 80,
       origin: { y: 0.62 },
       colors: ['#f472b6', '#fde047', '#38bdf8', '#a855f7', '#34d399']
     });
   }
 }
 
-function updateBunnyQuote() {
-  const quoteEl = document.getElementById('bunny-quote');
+function updateBunnyQuote(customQuote = null) {
+  const quoteEl = document.getElementById('bunny-bubble');
   if (!quoteEl) return;
-  const quote = BUNNY_QUOTES[Math.floor(Math.random() * BUNNY_QUOTES.length)];
+  const quote = customQuote || BUNNY_QUOTES[Math.floor(Math.random() * BUNNY_QUOTES.length)];
   quoteEl.textContent = quote;
 }
 
-/**
- * Animação da alavanca lateral
- */
 function pullLever() {
   const lever = document.getElementById('slot-lever');
   if (!lever) return;
@@ -428,7 +412,7 @@ function pullLever() {
 }
 
 /**
- * Executa o giro
+ * Executa uma rodada padrão com animação
  */
 function handleSpin() {
   if (state.isSpinning) return;
@@ -448,7 +432,7 @@ function handleSpin() {
   state.rounds++;
 
   const msgEl = document.getElementById('round-message');
-  msgEl.className = 'round-status-banner neutral';
+  msgEl.className = 'round-status-pill neutral';
   msgEl.textContent = 'Girando os rolos... 🍼✨';
 
   const reels = [
@@ -463,7 +447,7 @@ function handleSpin() {
     sounds.playClick();
     ticks++;
     if (ticks > 9) clearInterval(tickTimer);
-  }, 70);
+  }, 65);
 
   const result = spinReels();
   const outcome = evaluatePayout(result);
@@ -480,14 +464,14 @@ function handleSpin() {
 
     if (outcome.isWin) {
       state.wins++;
-      msgEl.className = 'round-status-banner win';
+      msgEl.className = 'round-status-pill win';
       msgEl.innerHTML = `🎉 <strong>PARABÉNS NENÉM!</strong> Tirou 3x ${outcome.symbol.emoji} no centro e faturou <strong>+${outcome.payout} moedas</strong>!`;
       
       sounds.playYay();
       triggerWinConfetti();
     } else {
       state.losses++;
-      msgEl.className = 'round-status-banner loss';
+      msgEl.className = 'round-status-pill loss';
       const lossMsgs = [
         "😢 Não deu desta vez! A Bebêt agradece sua contribuição (-1 moeda).",
         "🍼 Quase! Mais uma rodadinha e a sorte vira!",
@@ -495,7 +479,7 @@ function handleSpin() {
         "✨ Só perde quem desiste de tentar!"
       ];
       msgEl.textContent = lossMsgs[Math.floor(Math.random() * lossMsgs.length)];
-      sounds.playLoss();
+      sounds.playSad();
     }
 
     if (state.rounds % 3 === 0) {
@@ -516,26 +500,89 @@ function handleSpin() {
   }, 650);
 }
 
-function handleAutoSpin() {
-  if (state.isSpinning || state.autoSpinning) return;
-  state.autoSpinning = true;
-  const btnAuto = document.getElementById('btn-auto');
-  btnAuto.disabled = true;
+/**
+ * SISTEMA DE APOSTA 10X INSTANTÂNEO (Pedido expresso do usuário)
+ * Executa as 10 rodadas instantaneamente em 1 clique, sem atraso de animação.
+ */
+function handleInstant10x() {
+  if (state.isSpinning) return;
 
-  let count = 10;
-  const autoInterval = setInterval(() => {
-    if (count <= 0 || state.balance < state.betCost) {
-      clearInterval(autoInterval);
-      state.autoSpinning = false;
-      btnAuto.disabled = false;
-      if (state.balance < state.betCost) {
-        showItauLoanModal();
+  if (state.balance < state.betCost) {
+    showItauLoanModal();
+    return;
+  }
+
+  pullLever();
+
+  const startingBalance = state.balance;
+  let batchWins = 0;
+  let batchLosses = 0;
+  let batchPaid = 0;
+  let lastSpinResult = null;
+  let bestWinResult = null;
+  let maxPayoutInBatch = 0;
+
+  const spinsToRun = Math.min(10, state.balance);
+
+  for (let i = 0; i < spinsToRun; i++) {
+    state.balance -= state.betCost;
+    state.totalBet += state.betCost;
+    state.rounds++;
+
+    const res = spinReels();
+    lastSpinResult = res;
+
+    const out = evaluatePayout(res);
+    state.totalPaid += out.payout;
+    state.balance += out.payout;
+    state.profitHistory.push(out.netProfit);
+    state.balanceHistory.push(state.balance);
+    state.roundLabels.push(state.rounds);
+
+    if (out.isWin) {
+      state.wins++;
+      batchWins++;
+      batchPaid += out.payout;
+      if (out.payout > maxPayoutInBatch) {
+        maxPayoutInBatch = out.payout;
+        bestWinResult = res;
       }
-      return;
+    } else {
+      state.losses++;
+      batchLosses++;
     }
-    handleSpin();
-    count--;
-  }, 820);
+
+    if (state.balance < state.betCost) {
+      break;
+    }
+  }
+
+  // Exibe o melhor resultado ou o último
+  renderReelSymbols(bestWinResult || lastSpinResult);
+
+  const netBatchProfit = state.balance - startingBalance;
+  const msgEl = document.getElementById('round-message');
+
+  if (batchWins > 0) {
+    msgEl.className = 'round-status-pill win';
+    msgEl.innerHTML = `⚡ <strong>10x Instantâneo!</strong> ${batchWins} vitória(s), faturou +${batchPaid} moedas (Lucro Líquido: ${netBatchProfit >= 0 ? '+' + netBatchProfit : netBatchProfit}).`;
+    sounds.playYay();
+    triggerWinConfetti();
+  } else {
+    msgEl.className = 'round-status-pill loss';
+    msgEl.innerHTML = `⚡ <strong>10x Instantâneo!</strong> 0 vitórias em ${spinsToRun} giros (-${spinsToRun} moedas). A casa sempre vence!`;
+    sounds.playSad();
+  }
+
+  updateBunnyQuote(`⚡ 10 giros instantâneos!`);
+  updateStatsUI();
+  updateChart();
+
+  if (state.balance < state.betCost) {
+    setTimeout(() => {
+      showItauLoanModal();
+    }, 450);
+  }
 }
 
 function showItauLoanModal() {
@@ -555,7 +602,7 @@ function acceptLoan() {
   modal.classList.add('hidden');
 
   const msgEl = document.getElementById('round-message');
-  msgEl.className = 'round-status-banner win';
+  msgEl.className = 'round-status-pill win';
   msgEl.innerHTML = `💸 <strong>Empréstimo Aprovado!</strong> +100 moedas liberadas! Dívida: ${state.totalDebt} créditos (67% a.m.). Continue apostando!`;
 
   updateStatsUI();
@@ -598,25 +645,53 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  document.getElementById('btn-auto').addEventListener('click', () => {
+  // 10x Instantâneo
+  document.getElementById('btn-auto-instant').addEventListener('click', () => {
     sounds.init();
-    handleAutoSpin();
+    handleInstant10x();
   });
 
-  // Controle de som
+  // Setas de aposta (informativas)
+  const notifyFixedBet = () => {
+    const msgEl = document.getElementById('round-message');
+    msgEl.className = 'round-status-pill neutral';
+    msgEl.textContent = 'Aposta fixa de 1 moeda por giro (conforme modelo acadêmico RTP 84%).';
+  };
+  document.getElementById('btn-bet-minus').addEventListener('click', notifyFixedBet);
+  document.getElementById('btn-bet-plus').addEventListener('click', notifyFixedBet);
+
+  // Controle de som (engrenagem ou ícone de som)
   document.getElementById('btn-sound').addEventListener('click', () => {
     sounds.toggleSound();
   });
 
-  // Home / Sobre
+  // Home / Manifesto
   document.getElementById('btn-home').addEventListener('click', () => {
     introModal.classList.remove('hidden');
   });
 
+  // Mascote Coelhinho clica para trocar frase
+  const mascotBox = document.querySelector('.bunny-svg-box');
+  if (mascotBox) {
+    mascotBox.addEventListener('click', () => updateBunnyQuote());
+  }
+
   // Sidebar navigation
   const labModal = document.getElementById('lab-modal');
+  document.getElementById('menu-inicio').addEventListener('click', () => {
+    introModal.classList.remove('hidden');
+  });
+
   document.getElementById('menu-jogos').addEventListener('click', () => {
     labModal.classList.add('hidden');
+  });
+
+  document.getElementById('menu-recompensas').addEventListener('click', () => {
+    showItauLoanModal();
+  });
+
+  document.getElementById('menu-itau').addEventListener('click', () => {
+    showItauLoanModal();
   });
 
   document.getElementById('menu-lab').addEventListener('click', () => {
@@ -626,14 +701,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('btn-close-lab').addEventListener('click', () => {
     labModal.classList.add('hidden');
-  });
-
-  document.getElementById('menu-itau').addEventListener('click', () => {
-    showItauLoanModal();
-  });
-
-  document.getElementById('menu-sobre').addEventListener('click', () => {
-    introModal.classList.remove('hidden');
   });
 
   // Empréstimo Itaú Kids

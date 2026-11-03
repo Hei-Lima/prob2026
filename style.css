@@ -1,6 +1,6 @@
 /* ============================================================
    BEBÊT: A BET PARA BEBÊS! 🍼🎰
-   Estilo visual fiel à referência MiniWin (Candy Pastel / Cassino Infantil)
+   Refinamento visual fiel à referência MiniWin (Ilustração 2D / Cartoon)
    ============================================================ */
 
 :root {
@@ -11,6 +11,7 @@
   
   --candy-purple: #8b5cf6;
   --deep-purple: #6d28d9;
+  --dark-purple-bezel: #581c87;
   --light-purple: #ede9fe;
   --border-purple: #c4b5fd;
 
@@ -22,19 +23,15 @@
   --dark-green: #15803d;
   --light-green: #dcfce7;
 
-  --sky-top: #bae6fd;
-  --sky-mid: #e0e7ff;
-  --sky-bot: #fed7aa;
-
-  --app-bg: #ffffff;
+  --sky-blue: #bae6fd;
   --text-main: #334155;
   --text-muted: #64748b;
 
-  --shadow-candy: 0 14px 28px rgba(139, 92, 246, 0.15), 0 10px 10px rgba(0, 0, 0, 0.04);
-  --shadow-machine: 0 20px 35px rgba(219, 39, 119, 0.35);
-  --radius-xl: 32px;
-  --radius-lg: 20px;
-  --radius-md: 14px;
+  --shadow-candy: 0 10px 24px rgba(124, 58, 237, 0.12);
+  --shadow-machine: 0 18px 36px rgba(219, 39, 119, 0.35);
+  --radius-xl: 36px;
+  --radius-lg: 24px;
+  --radius-md: 16px;
 }
 
 * {
@@ -45,346 +42,346 @@
 
 body {
   font-family: 'Fredoka', 'Nunito', sans-serif;
-  background: url('media/background.png') no-repeat center center fixed;
-  background-size: cover;
+  /* O background ocupa toda a área disponível integrando o cenário */
+  background: url('media/background.png') center bottom / cover no-repeat fixed;
   min-height: 100vh;
   color: var(--text-main);
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  padding: 20px 12px;
+  justify-content: flex-start;
+  padding: 12px 16px 24px 16px;
   position: relative;
   overflow-x: hidden;
 }
 
 /* ============================================================
-   CENÁRIO DE FUNDO: ARCO-ÍRIS, NUVENS E COLINAS
+   ESTRELINHAS FLUTUANTES NO CENÁRIO
    ============================================================ */
-.sky-background {
+.scenery-star {
   position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  overflow: hidden;
-}
-
-/* Arco-íris, nuvens e colinas já estão na imagem background.png */
-.rainbow-arc, .cloud, .hills-backdrop {
-  display: none;
-}
-
-/* Estrelinhas decorativas no céu */
-.star-decor {
-  position: absolute;
   font-size: 2.2rem;
   color: #fde047;
-  filter: drop-shadow(0 4px 6px rgba(234, 179, 8, 0.4));
-  animation: pulseStar 3s ease-in-out infinite alternate;
+  filter: drop-shadow(0 4px 6px rgba(202, 138, 4, 0.45));
+  pointer-events: none;
+  z-index: 1;
   user-select: none;
-}
-.star-d1 { top: 90px; left: 24%; font-size: 2rem; animation-delay: 0.2s; }
-.star-d2 { top: 180px; left: 18%; font-size: 1.8rem; animation-delay: 1.1s; }
-.star-d3 { top: 75px; right: 28%; font-size: 2.4rem; animation-delay: 0.7s; }
-.star-d4 { top: 220px; right: 8%; font-size: 1.9rem; animation-delay: 1.6s; }
-.star-d5 { bottom: 80px; right: 22%; font-size: 2.1rem; animation-delay: 0.5s; }
-
-@keyframes pulseStar {
-  0% { transform: scale(0.9) rotate(-5deg); }
-  100% { transform: scale(1.15) rotate(12deg); }
+  animation: twinkleStar 3s ease-in-out infinite alternate;
 }
 
-/* Colinas suaves na base */
-.hills-backdrop {
-  position: absolute;
-  bottom: -60px;
-  left: -5%;
-  width: 110%;
-  height: 160px;
-  background: linear-gradient(180deg, rgba(167, 243, 208, 0.6) 0%, rgba(110, 231, 183, 0.8) 100%);
-  border-radius: 50% 50% 0 0;
+.star-pos-1 { top: 90px; left: 22%; animation-delay: 0s; font-size: 2rem; }
+.star-pos-2 { top: 210px; left: 19%; animation-delay: 1.2s; font-size: 1.7rem; }
+.star-pos-3 { top: 80px; right: 26%; animation-delay: 0.6s; font-size: 2.4rem; }
+.star-pos-4 { top: 230px; right: 8%; animation-delay: 1.8s; font-size: 2rem; }
+.star-pos-5 { bottom: 120px; right: 18%; animation-delay: 0.9s; font-size: 2.1rem; }
+
+@keyframes twinkleStar {
+  0% { transform: scale(0.9) rotate(-6deg); }
+  100% { transform: scale(1.18) rotate(14deg); }
 }
 
 /* ============================================================
-   JANELA PRINCIPAL DO APP (CONSOLE INFANTIL / TABLET)
+   VIEWPORT PRINCIPAL DO JOGO (SEM CONTAINER BRANCO OPACO!)
    ============================================================ */
-.app-window {
+.game-viewport {
   position: relative;
   z-index: 10;
   width: 100%;
-  max-width: 1160px;
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(12px);
-  border-radius: var(--radius-xl);
-  border: 8px solid #ede9fe;
-  box-shadow: var(--shadow-candy);
+  max-width: 1140px;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  gap: 14px;
 }
 
 /* ============================================================
-   BARRA SUPERIOR (HEADER)
+   BARRA SUPERIOR (HEADER INTEGRADO)
    ============================================================ */
-.top-nav-bar {
+.top-header-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 24px;
-  background: linear-gradient(180deg, #ffffff 0%, #fdf4ff 100%);
-  border-bottom: 3px solid #f3e8ff;
-  gap: 16px;
-  flex-wrap: wrap;
+  width: 100%;
+  padding: 6px 12px;
+  gap: 14px;
 }
 
-.brand-container {
+.header-logo-area {
   display: flex;
   align-items: center;
 }
 
-.nav-brand-logo {
-  height: 58px;
+.bebet-logo-img {
+  height: 54px;
   width: auto;
   object-fit: contain;
-  filter: drop-shadow(0 4px 6px rgba(219, 39, 119, 0.2));
+  filter: drop-shadow(0 4px 6px rgba(219, 39, 119, 0.25));
   transition: transform 0.25s;
 }
 
-.nav-brand-logo:hover {
-  transform: scale(1.04) rotate(-2deg);
+.bebet-logo-img:hover {
+  transform: scale(1.05) rotate(-2deg);
 }
 
-/* Pílulas de HUD Central */
-.header-pills-row {
+/* HUD Central: Seu Saldo & Lucro Bebêt */
+.header-hud-center {
   display: flex;
   align-items: center;
   gap: 14px;
 }
 
-.hud-pill {
+.coin-hud-pill {
   display: flex;
   align-items: center;
   gap: 10px;
   background: #ffffff;
-  padding: 6px 16px;
+  border: 3px solid #e0e7ff;
   border-radius: 50px;
-  border: 3px solid #e2e8f0;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  padding: 5px 18px 5px 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
 }
 
-.balance-hud {
-  border-color: #fef08a;
-  background: #fffbeb;
+.coin-circle {
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, #fde047 0%, #eab308 100%);
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 6px rgba(202, 138, 4, 0.35);
 }
 
-.profit-hud {
-  border-color: #fbcfe8;
-  background: #fdf2f8;
-}
-
-.hud-coin {
-  font-size: 1.6rem;
+.coin-star {
+  color: #ffffff;
+  font-size: 1.25rem;
+  font-weight: 900;
   line-height: 1;
 }
 
-.hud-text-group {
+.coin-hud-labels {
   display: flex;
   flex-direction: column;
 }
 
-.hud-label {
-  font-size: 0.72rem;
+.hud-mini-label {
+  font-size: 0.68rem;
   font-weight: 700;
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  line-height: 1;
 }
 
-.hud-value {
+.hud-main-num {
   font-size: 1.35rem;
   font-weight: 800;
   color: var(--deep-purple);
   line-height: 1.1;
 }
 
-.casino-color {
+.casino-profit-pill {
+  border-color: #fbcfe8;
+}
+
+.casino-circle {
+  background: linear-gradient(135deg, #f472b6 0%, #db2777 100%);
+  font-size: 1.1rem;
+}
+
+.casino-num {
   color: var(--dark-pink);
 }
 
-/* Lado Direito do Header: Perfil & Botões */
-.header-right-group {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.baby-profile-card {
+/* Lado Direito: Perfil da Jogadora + Botões */
+.header-right-tools {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: #f5f3ff;
-  border: 2px solid #ddd6fe;
-  padding: 6px 14px;
-  border-radius: 50px;
 }
 
-.baby-avatar {
-  font-size: 1.5rem;
-  background: #ede9fe;
+.player-profile-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  border: 3px solid #e0e7ff;
+  border-radius: 50px;
+  padding: 4px 14px 4px 6px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.player-avatar-circle {
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, #c084fc 0%, #7c3aed 100%);
+  border: 3px solid #ffffff;
   border-radius: 50%;
-  width: 36px;
-  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  font-size: 1.25rem;
 }
 
-.baby-info {
+.avatar-crown {
+  position: absolute;
+  top: -8px;
+  right: -2px;
+  font-size: 0.95rem;
+}
+
+.player-profile-info {
   display: flex;
   flex-direction: column;
 }
 
-.baby-name {
-  font-size: 0.85rem;
+.player-title {
+  font-size: 0.82rem;
   font-weight: 700;
   color: var(--deep-purple);
 }
 
-.baby-bar-wrap {
+.player-bar-container {
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
-.baby-level-txt {
-  font-size: 0.68rem;
+.player-level-text {
+  font-size: 0.65rem;
   font-weight: 600;
   color: var(--text-muted);
 }
 
-.baby-progress-track {
-  width: 55px;
+.player-level-track {
+  width: 58px;
   height: 6px;
   background: #e2e8f0;
   border-radius: 10px;
   overflow: hidden;
 }
 
-.baby-progress-fill {
+.player-level-fill {
   height: 100%;
-  background: linear-gradient(90deg, #ec4899, #8b5cf6);
+  background: linear-gradient(90deg, #ec4899, #7c3aed);
   border-radius: 10px;
 }
 
-.btn-round-nav {
+.btn-round-tool {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  border: 3px solid #ddd6fe;
-  background: #f5f3ff;
-  color: var(--candy-purple);
-  font-size: 1.3rem;
+  border: 3px solid #c4b5fd;
+  background: #8b5cf6;
+  color: #ffffff;
+  font-size: 1.35rem;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 8px rgba(139, 92, 246, 0.15);
-  transition: all 0.2s;
+  box-shadow: 0 4px 10px rgba(124, 58, 237, 0.3);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.btn-round-nav:hover {
-  transform: translateY(-2px) scale(1.06);
-  background: #ede9fe;
-  border-color: var(--candy-purple);
+.btn-round-tool:hover {
+  transform: translateY(-2px) scale(1.08);
+  background: #7c3aed;
+  box-shadow: 0 6px 14px rgba(124, 58, 237, 0.45);
 }
 
 /* ============================================================
-   CORPO DO APP: SIDEBAR + CONSOLE DE JOGO
+   PALCO DO JOGO: SIDEBAR + MESA PRINCIPAL
    ============================================================ */
-.app-body-layout {
+.game-stage-layout {
   display: flex;
   gap: 18px;
-  padding: 20px 24px;
-  min-height: 560px;
+  align-items: flex-start;
+  width: 100%;
 }
 
 /* ============================================================
-   SIDEBAR LATERAL (MINIWIN STYLE)
+   SIDEBAR LATERAL ESQUERDA (FIEL À IMAGEM 1)
    ============================================================ */
-.sidebar-panel {
-  width: 170px;
+.left-sidebar-area {
+  width: 165px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 20px;
+  gap: 16px;
 }
 
-.side-menu {
+.sidebar-menu-card {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(10px);
+  border: 4px solid #dbeafe;
+  border-radius: var(--radius-lg);
+  padding: 10px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
+  box-shadow: var(--shadow-candy);
 }
 
-.nav-item {
+.side-btn {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 16px;
-  border-radius: var(--radius-lg);
-  border: 2px solid transparent;
-  background: #f8fafc;
-  color: var(--text-muted);
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  border: none;
+  background: transparent;
+  color: #64748b;
   font-family: 'Fredoka', sans-serif;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   text-align: left;
   transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.nav-item .nav-icon {
+.side-btn .side-icon {
   font-size: 1.25rem;
 }
 
-.nav-item:hover {
+.side-btn:hover {
   background: #f1f5f9;
   color: var(--deep-purple);
   transform: translateX(4px);
 }
 
-.nav-item.active {
-  background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+.side-btn.active {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
   color: #ffffff;
-  box-shadow: 0 8px 18px rgba(124, 58, 237, 0.35);
-  border-color: #c084fc;
+  border-radius: var(--radius-md);
+  box-shadow: 0 6px 16px rgba(124, 58, 237, 0.35);
 }
 
-/* Mascote Coelhinho da Bebêt */
-.bunny-mascot-container {
+/* Mascote Coelhinho no canto inferior esquerdo */
+.mascot-bunny-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: auto;
   position: relative;
+  margin-top: 10px;
 }
 
-.bunny-bubble {
+.mascot-speech-bubble {
   background: #ffffff;
   border: 3px solid #fbcfe8;
-  border-radius: 18px;
-  padding: 6px 12px;
-  font-size: 0.8rem;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
   font-weight: 700;
   color: var(--dark-pink);
-  margin-bottom: 8px;
-  box-shadow: 0 4px 10px rgba(244, 114, 182, 0.2);
+  box-shadow: 0 4px 10px rgba(244, 114, 182, 0.25);
   position: relative;
-  text-align: center;
-  max-width: 150px;
-  animation: bounceBubble 2.5s ease-in-out infinite;
+  margin-bottom: 6px;
+  animation: floatBubble 2.5s ease-in-out infinite;
+  white-space: nowrap;
 }
 
-.bunny-bubble::after {
+.mascot-speech-bubble::after {
   content: '';
   position: absolute;
   bottom: -8px;
@@ -395,170 +392,101 @@ body {
   border-color: #fbcfe8 transparent transparent transparent;
 }
 
-@keyframes bounceBubble {
+@keyframes floatBubble {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-4px); }
 }
 
-.bunny-illustration {
-  width: 90px;
-  height: 90px;
-  background: #ffffff;
-  border: 4px solid #fce7f3;
-  border-radius: 50%;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 8px 16px rgba(244, 114, 182, 0.25);
+.bunny-svg-box {
+  width: 140px;
+  height: 155px;
+  filter: drop-shadow(0 8px 16px rgba(124, 58, 237, 0.18));
+  cursor: pointer;
+  transition: transform 0.2s;
 }
 
-.bunny-ears {
-  position: absolute;
-  top: -24px;
-  display: flex;
-  gap: 10px;
+.bunny-svg-box:hover {
+  transform: scale(1.05) rotate(2deg);
 }
 
-.ear {
-  width: 18px;
-  height: 34px;
-  background: #ffffff;
-  border: 3px solid #fbcfe8;
-  border-radius: 50% 50% 0 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.ear-left { transform: rotate(-12deg); }
-.ear-right { transform: rotate(12deg); }
-
-.ear-inner {
-  width: 8px;
-  height: 18px;
-  background: #f472b6;
-  border-radius: 50%;
-  opacity: 0.7;
-}
-
-.bunny-face {
-  position: relative;
+.bunny-vector {
   width: 100%;
   height: 100%;
-}
-
-.bunny-eye {
-  position: absolute;
-  top: 36px;
-  width: 8px;
-  height: 8px;
-  background: #1e293b;
-  border-radius: 50%;
-}
-.eye-left { left: 24px; }
-.eye-right { right: 24px; }
-
-.bunny-nose {
-  position: absolute;
-  top: 42px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 6px;
-  height: 5px;
-  background: #ec4899;
-  border-radius: 40%;
-}
-
-.bunny-cheeks {
-  position: absolute;
-  top: 44px;
-  width: 100%;
-}
-.cheek {
-  position: absolute;
-  width: 12px;
-  height: 7px;
-  background: #fbcfe8;
-  border-radius: 50%;
-}
-.cheek-l { left: 14px; }
-.cheek-r { right: 14px; }
-
-.bunny-star-held {
-  position: absolute;
-  bottom: 0px;
-  right: -4px;
-  font-size: 1.6rem;
-  filter: drop-shadow(0 2px 4px rgba(234, 179, 8, 0.4));
-  animation: wiggleStar 2s ease-in-out infinite;
-}
-
-@keyframes wiggleStar {
-  0%, 100% { transform: rotate(-8deg); }
-  50% { transform: rotate(12deg); }
+  overflow: visible;
 }
 
 /* ============================================================
-   ÁREA CENTRAL DO JOGO
+   PALCO CENTRAL (SLOT MACHINE + PAINEL DE CONTROLE)
    ============================================================ */
-.game-board-area {
+.main-stage-panel {
   flex: 1;
+  background: rgba(240, 246, 255, 0.72);
+  backdrop-filter: blur(10px);
+  border: 4px solid #c7d2fe;
+  border-radius: var(--radius-xl);
+  padding: 18px 22px;
+  box-shadow: 0 16px 36px rgba(99, 102, 241, 0.14);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
 }
 
-/* Pílula de Título Caça-Níqueis (Roxo Real) */
-.game-title-pill {
+/* Placa Roxa Arredondada com Título "Caça-Níqueis" */
+.slot-title-cloud-plaque {
   display: inline-flex;
   align-items: center;
   gap: 14px;
-  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  background: linear-gradient(180deg, #8b5cf6 0%, #6d28d9 100%);
   color: #ffffff;
-  padding: 8px 32px;
+  padding: 6px 34px;
   border-radius: 50px;
   border: 4px solid #c4b5fd;
   box-shadow: 0 8px 18px rgba(109, 40, 217, 0.35);
+  margin-top: -6px;
 }
 
-.title-star {
+.plaque-star-left, .plaque-star-right {
   font-size: 1.8rem;
   color: #fde047;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
 }
 
-.title-texts h1 {
-  font-size: 1.55rem;
+.plaque-text-block {
+  text-align: center;
+}
+
+.plaque-heading {
+  font-size: 1.65rem;
   font-weight: 700;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
   line-height: 1.15;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
 }
 
-.title-texts p {
+.plaque-subheading {
   font-size: 0.85rem;
-  color: #e9d5ff;
-  font-weight: 500;
+  color: #fef08a;
+  font-weight: 600;
 }
 
-/* Grid da Máquina + Controles */
-.machine-and-controls-grid {
+/* Linha da Máquina + Controles */
+.machine-and-panel-row {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 32px;
+  gap: 28px;
   width: 100%;
 }
 
 /* ============================================================
-   O GABINETE DA MÁQUINA ROSA (MINIWIN STYLE)
+   GABINETE DA MÁQUINA DE CAÇA-NÍQUEIS (ROSA / MAGENTA FIEL)
    ============================================================ */
-.machine-housing-card {
+.slot-cabinet-housing {
   position: relative;
-  background: linear-gradient(180deg, #f472b6 0%, #ec4899 50%, #db2777 100%);
-  border: 10px solid #fbcfe8;
+  background: linear-gradient(180deg, #f472b6 0%, #ec4899 45%, #db2777 100%);
+  border: 9px solid #fbcfe8;
   border-radius: 38px;
-  padding: 24px 28px;
+  padding: 22px 24px;
   box-shadow: var(--shadow-machine), inset 0 6px 12px rgba(255, 255, 255, 0.5);
   display: flex;
   flex-direction: column;
@@ -566,77 +494,74 @@ body {
 }
 
 /* Coroa Dourada Superior */
-.machine-golden-crown {
+.cabinet-golden-crown {
   position: absolute;
   top: -34px;
   background: linear-gradient(180deg, #fde047 0%, #eab308 100%);
   border: 5px solid #ffffff;
-  border-radius: 20px 20px 6px 6px;
-  padding: 4px 20px;
+  border-radius: 20px 20px 8px 8px;
+  padding: 4px 22px;
   display: flex;
   align-items: center;
   gap: 6px;
   box-shadow: 0 8px 16px rgba(202, 138, 4, 0.35);
+  z-index: 4;
 }
 
-.crown-symbol {
-  font-size: 1.8rem;
+.crown-svg-icon {
+  font-size: 1.85rem;
   line-height: 1;
 }
 
-.crown-jewel {
-  font-size: 0.9rem;
+.crown-jewel-star {
+  font-size: 0.95rem;
 }
 
-/* Bezel da Tela dos Rolos */
-.machine-screen-bezel {
+/* Estrelinhas Amarelas nos 4 Cantos do Gabinete */
+.cabinet-star-corner {
+  position: absolute;
+  font-size: 1.4rem;
+  color: #fde047;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  user-select: none;
+  z-index: 3;
+}
+.c-top-left { top: 8px; left: 10px; }
+.c-top-right { top: 8px; right: 10px; }
+.c-bot-left { bottom: 8px; left: 10px; }
+.c-bot-right { bottom: 8px; right: 10px; }
+
+/* Tela Interna dos Rolos (Fundo Creme com Bordas Roxas) */
+.cabinet-screen-viewport {
+  background: #ffffff;
+  border: 7px solid var(--dark-purple-bezel);
+  border-radius: 24px;
+  padding: 10px 14px;
+  box-shadow: inset 0 8px 16px rgba(0, 0, 0, 0.28);
+}
+
+.reels-tracks-container {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #ffffff;
-  border: 7px solid #831843;
-  border-radius: 24px;
-  padding: 10px 14px;
-  box-shadow: inset 0 8px 16px rgba(0, 0, 0, 0.25);
 }
 
-.payline-bracket {
-  font-size: 1.5rem;
-  user-select: none;
-  animation: pulseBracket 1.2s ease-in-out infinite alternate;
-}
-.bracket-left { transform: translateX(-2px); }
-.bracket-right { transform: translateX(2px); }
-
-@keyframes pulseBracket {
-  0% { transform: scale(0.9); opacity: 0.7; }
-  100% { transform: scale(1.15); opacity: 1; }
-}
-
-/* Viewport dos 3 Rolos */
-.reels-viewport {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.reel-separator {
+.reel-divider-line {
   width: 4px;
-  height: 250px;
-  background: #f1f5f9;
+  height: 240px;
+  background: #ede9fe;
   border-radius: 4px;
 }
 
-.reel-column {
+.reel-track {
   display: flex;
   flex-direction: column;
   gap: 8px;
   width: 90px;
-  transition: transform 0.1s;
 }
 
-.reel-cell {
-  height: 74px;
+.symbol-cell {
+  height: 72px;
   background: #ffffff;
   border-radius: 16px;
   display: flex;
@@ -646,46 +571,43 @@ body {
   transition: all 0.2s ease;
 }
 
-.sym-box {
-  font-size: 2.5rem;
+.slot-symbol {
+  font-size: 2.6rem;
   line-height: 1;
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.12));
 }
 
-/* Linha superior e inferior (levemente menores e translúcidas) */
-.top-row, .bot-row {
-  opacity: 0.52;
-  transform: scale(0.86);
+.top-slot, .bottom-slot {
+  opacity: 0.55;
+  transform: scale(0.88);
   background: #fafaf9;
 }
 
-/* LINHA DO MEIO (A LINHA CENTRAL AVALIADA) */
-.mid-row {
+/* A LINHA CENTRAL AVALIADA (DESTAQUE DA PAYLINE) */
+.center-slot {
   background: #fdf2f8;
   border: 3px solid #f472b6;
-  box-shadow: 0 0 16px rgba(244, 114, 182, 0.45);
-  transform: scale(1.05);
+  box-shadow: 0 0 16px rgba(244, 114, 182, 0.5);
+  transform: scale(1.06);
 }
 
-.mid-row .sym-box {
-  font-size: 3rem;
+.center-slot .slot-symbol {
+  font-size: 3.1rem;
 }
 
-/* Animação de giro */
-.reel-column.spinning .reel-cell {
-  animation: blurSpin 0.1s linear infinite;
+/* Animação de Giro */
+.reel-track.spinning .symbol-cell {
+  animation: reelSpinBlur 0.1s linear infinite;
 }
 
-@keyframes blurSpin {
+@keyframes reelSpinBlur {
   0% { transform: translateY(-10px); filter: blur(3px); }
   50% { transform: translateY(10px); filter: blur(4px); }
   100% { transform: translateY(0); filter: blur(0px); }
 }
 
-/* ============================================================
-   ALAVANCA MECÂNICA FÍSICA LATERAL
-   ============================================================ */
-.slot-lever-assembly {
+/* Alavanca Lateral com Bola Rosa */
+.cabinet-lever-assembly {
   position: absolute;
   right: -36px;
   top: 50%;
@@ -697,30 +619,28 @@ body {
   transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.lever-pivot {
+.lever-pivot-base {
   position: absolute;
   left: 0;
-  top: 50px;
+  top: 52px;
   width: 22px;
-  height: 40px;
+  height: 38px;
   background: #9d174d;
   border-radius: 0 12px 12px 0;
   border: 3px solid #ffffff;
 }
 
-.lever-rod {
+.lever-arm-rod {
   position: absolute;
   left: 14px;
-  top: 10px;
+  top: 12px;
   width: 10px;
-  height: 70px;
+  height: 68px;
   background: linear-gradient(90deg, #fde047, #ca8a04);
   border-radius: 5px;
-  transform-origin: bottom center;
-  transition: transform 0.2s ease;
 }
 
-.lever-knob {
+.lever-pink-ball {
   position: absolute;
   top: -2px;
   left: 2px;
@@ -729,28 +649,26 @@ body {
   background: radial-gradient(circle at 35% 35%, #f472b6 0%, #db2777 65%, #9d174d 100%);
   border: 4px solid #ffffff;
   border-radius: 50%;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
-  transition: transform 0.2s ease;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.28);
 }
 
-/* Quando puxada */
-.slot-lever-assembly.pulled {
+.cabinet-lever-assembly.pulled {
   transform: translateY(-20%) rotate(25deg);
 }
 
 /* ============================================================
-   PAINEL DE CONTROLE LATERAL DIREITO (APOSTA + BOTÃO GIRAR)
+   PAINEL DE APOSTA À DIREITA (FIEL À IMAGEM 1)
    ============================================================ */
-.side-controls-column {
+.right-bet-sidepanel {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   width: 195px;
 }
 
-.bet-action-card {
+.bet-control-whitecard {
   background: #ffffff;
-  border: 4px solid #ddd6fe;
+  border: 4px solid #c7d2fe;
   border-radius: var(--radius-lg);
   padding: 16px 14px;
   box-shadow: var(--shadow-candy);
@@ -760,56 +678,80 @@ body {
   gap: 12px;
 }
 
-.bet-amount-box {
+.bet-header-group {
   display: flex;
   align-items: center;
   gap: 10px;
   width: 100%;
 }
 
-.bet-coin-icon {
-  font-size: 2rem;
+.bet-golden-coin {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, #fde047 0%, #eab308 100%);
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 6px rgba(202, 138, 4, 0.35);
+  flex-shrink: 0;
 }
 
-.bet-details {
+.coin-inner-star {
+  color: #ffffff;
+  font-size: 1.4rem;
+  font-weight: 900;
+}
+
+.bet-text-column {
   display: flex;
   flex-direction: column;
   flex: 1;
 }
 
-.bet-title {
-  font-size: 0.8rem;
+.bet-word {
+  font-size: 0.85rem;
   font-weight: 700;
   color: var(--text-muted);
 }
 
-.bet-selector-row {
+.bet-stepper-control {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #f1f5f9;
-  border-radius: 30px;
-  padding: 4px 10px;
   margin-top: 2px;
 }
 
-.bet-arrow-btn {
+.stepper-arrow-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: none;
+  background: #8b5cf6;
+  color: #ffffff;
   font-size: 1.2rem;
   font-weight: 800;
-  color: var(--candy-purple);
-  user-select: none;
-  cursor: default;
-  opacity: 0.5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.15s;
 }
 
-.bet-num {
-  font-size: 1.25rem;
+.stepper-arrow-btn:hover {
+  transform: scale(1.1);
+  background: #7c3aed;
+}
+
+.stepper-bet-value {
+  font-size: 1.45rem;
   font-weight: 800;
   color: var(--deep-purple);
 }
 
-/* BOTÃO GIRAR (VERDE JUCY 3D) */
-.btn-spin-large {
+/* BOTÃO GIRAR (GRANDE, VERDE E ARREDONDADO) */
+.btn-spin-green {
   width: 100%;
   background: linear-gradient(180deg, #4ade80 0%, #22c55e 50%, #16a34a 100%);
   border: 4px solid #86efac;
@@ -821,64 +763,65 @@ body {
   justify-content: center;
   gap: 8px;
   font-family: 'Fredoka', sans-serif;
-  font-size: 1.55rem;
+  font-size: 1.6rem;
   font-weight: 700;
   text-shadow: 0 2px 4px rgba(21, 128, 61, 0.6);
-  box-shadow: 0 8px 18px rgba(34, 197, 94, 0.4), inset 0 4px 6px rgba(255, 255, 255, 0.45);
+  box-shadow: 0 8px 18px rgba(34, 197, 94, 0.45), inset 0 4px 6px rgba(255, 255, 255, 0.5);
   cursor: pointer;
   transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.btn-spin-large:hover:not(:disabled) {
+.btn-spin-green:hover:not(:disabled) {
   transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 12px 22px rgba(34, 197, 94, 0.5);
+  box-shadow: 0 12px 22px rgba(34, 197, 94, 0.55);
 }
 
-.btn-spin-large:active:not(:disabled) {
+.btn-spin-green:active:not(:disabled) {
   transform: translateY(3px) scale(0.97);
   box-shadow: 0 4px 8px rgba(34, 197, 94, 0.4);
 }
 
-.btn-spin-large:disabled {
+.btn-spin-green:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   filter: grayscale(0.2);
 }
 
-.btn-play-icon {
-  font-size: 1.3rem;
+.play-triangle-icon {
+  font-size: 1.35rem;
 }
 
-.btn-auto-fast {
+/* BOTÃO 10X INSTANTÂNEO */
+.btn-instant-10x {
   width: 100%;
-  background: #f5f3ff;
-  border: 2px dashed #c084fc;
+  background: #fdf2f8;
+  border: 2px dashed #f472b6;
   border-radius: 30px;
   padding: 8px 12px;
-  color: var(--candy-purple);
+  color: var(--dark-pink);
   font-family: 'Fredoka', sans-serif;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
 }
 
-.btn-auto-fast:hover:not(:disabled) {
-  background: #ede9fe;
-  border-color: var(--candy-purple);
+.btn-instant-10x:hover:not(:disabled) {
+  background: #fce7f3;
+  border-color: var(--dark-pink);
   transform: scale(1.03);
 }
 
-/* Card Informativo "Como Funciona?" */
-.info-help-card {
+/* Cartão Explicativo "Como Funciona?" */
+.help-info-whitecard {
   background: #ffffff;
-  border: 3px solid #e2e8f0;
+  border: 4px solid #c7d2fe;
   border-radius: var(--radius-lg);
   padding: 12px 14px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
 }
 
-.info-help-header {
+.help-card-header {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -887,13 +830,17 @@ body {
   margin-bottom: 6px;
 }
 
-.info-help-card p {
+.bulb-icon {
+  font-size: 1.15rem;
+}
+
+.help-card-text {
   font-size: 0.78rem;
   line-height: 1.4;
   color: var(--text-muted);
 }
 
-.quick-stat-bar {
+.help-stats-mini {
   display: flex;
   justify-content: space-between;
   margin-top: 8px;
@@ -904,12 +851,12 @@ body {
 }
 
 /* ============================================================
-   STATUS DA RODADA (MENSAGEM DINÂMICA)
+   STATUS DA RODADA
    ============================================================ */
-.round-status-banner {
+.round-status-pill {
   width: 100%;
-  max-width: 540px;
-  padding: 10px 18px;
+  max-width: 520px;
+  padding: 8px 18px;
   border-radius: 50px;
   font-size: 0.95rem;
   font-weight: 700;
@@ -918,123 +865,112 @@ body {
   transition: all 0.3s;
 }
 
-.round-status-banner.neutral {
+.round-status-pill.neutral {
   background: #ffffff;
   color: var(--text-muted);
   border: 2px solid #e2e8f0;
 }
 
-.round-status-banner.win {
+.round-status-pill.win {
   background: #dcfce7;
   color: #15803d;
   border: 2px solid #86efac;
-  animation: pulseWin 0.4s alternate 2;
 }
 
-.round-status-banner.loss {
+.round-status-pill.loss {
   background: #fee2e2;
   color: #b91c1c;
   border: 2px solid #fca5a5;
 }
 
-@keyframes pulseWin {
-  0% { transform: scale(1); }
-  100% { transform: scale(1.05); }
-}
-
 /* ============================================================
-   CARD INFERIOR: PRÊMIOS POSSÍVEIS (MINIWIN STYLE)
+   PAINEL DE PRÊMIOS INFERIOR (FIEL À IMAGEM 1)
    ============================================================ */
-.payout-showcase-card {
+.prizes-horizontal-card {
   width: 100%;
-  max-width: 680px;
+  max-width: 660px;
   background: #ffffff;
-  border: 4px solid #ddd6fe;
+  border: 4px solid #c7d2fe;
   border-radius: var(--radius-lg);
-  padding: 12px 20px;
-  box-shadow: 0 6px 14px rgba(139, 92, 246, 0.08);
+  padding: 10px 18px;
+  box-shadow: 0 6px 16px rgba(124, 58, 237, 0.08);
 }
 
-.showcase-header {
+.prizes-card-title {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  margin-bottom: 10px;
-}
-
-.showcase-star {
-  font-size: 1.1rem;
-  color: var(--candy-yellow);
-}
-
-.showcase-title {
+  margin-bottom: 8px;
   font-size: 0.95rem;
   font-weight: 700;
   color: var(--deep-purple);
 }
 
-.prizes-horizontal-row {
+.p-star {
+  color: var(--candy-yellow);
+}
+
+.prizes-items-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 8px;
 }
 
-.prize-slot {
+.prize-column-item {
   display: flex;
   flex-direction: column;
   align-items: center;
   background: #f8fafc;
   border: 2px solid #f1f5f9;
   border-radius: 14px;
-  padding: 8px 12px;
+  padding: 6px 10px;
   flex: 1;
   transition: transform 0.2s;
 }
 
-.prize-slot:hover {
+.prize-column-item:hover {
   transform: translateY(-2px);
   border-color: #c4b5fd;
   background: #faf5ff;
 }
 
-.jackpot-slot {
+.jackpot-column {
   background: #fffbeb;
   border-color: #fde047;
 }
 
-.prize-symbol-art {
-  font-size: 1.7rem;
+.prize-symbol-large {
+  font-size: 1.75rem;
   line-height: 1;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
 }
 
-.prize-coins {
-  font-size: 0.8rem;
+.prize-coins-label {
+  font-size: 0.78rem;
   font-weight: 800;
   color: var(--text-main);
 }
 
-.jackpot-coins {
+.jackpot-coins-label {
   color: #b45309;
 }
 
-.prize-math {
-  font-size: 0.66rem;
+.prize-lucro-tag {
+  font-size: 0.65rem;
   color: var(--text-muted);
 }
 
 /* ============================================================
-   RODAPÉ DO APP
+   RODAPÉ SUTIL
    ============================================================ */
-.app-footer {
+.game-bottom-footer {
   text-align: center;
-  padding: 10px 16px;
+  padding: 6px 12px;
   font-size: 0.72rem;
-  color: var(--text-muted);
-  background: #ffffff;
-  border-top: 1px solid #f1f5f9;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
 /* ============================================================
@@ -1358,30 +1294,30 @@ body {
 }
 
 /* ============================================================
-   RESPONSIVIDADE (Telas menores / Celular)
+   RESPONSIVIDADE (Telas menores)
    ============================================================ */
 @media (max-width: 992px) {
-  .app-body-layout {
+  .game-stage-layout {
     flex-direction: column;
-    padding: 14px;
-  }
-  .sidebar-panel {
-    width: 100%;
-    flex-direction: row;
     align-items: center;
   }
-  .side-menu {
+  .left-sidebar-area {
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+  }
+  .sidebar-menu-card {
     flex-direction: row;
     flex-wrap: wrap;
   }
-  .bunny-mascot-container {
+  .mascot-bunny-wrapper {
     display: none;
   }
-  .machine-and-controls-grid {
+  .machine-and-panel-row {
     flex-direction: column;
-    gap: 20px;
+    gap: 18px;
   }
-  .side-controls-column {
+  .right-bet-sidepanel {
     width: 100%;
     max-width: 320px;
   }
