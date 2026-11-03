@@ -4,21 +4,45 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bebêt: A Bet Para Bebês! 🍼🎰</title>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="style.css">
-  <!-- Chart.js para o gráfico de saldo e probabilidades -->
+  
+  <!-- Chart.js para o gráfico de trajetória do saldo -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Canvas Confetti para efeitos de vitória fofinha -->
+  <!-- Canvas Confetti para efeitos de comemoração -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
+
+  <!-- ELEMENTOS DE ÁUDIO EXTERNOS -->
+  <audio id="bgm-audio" src="media/bgm.mp3" loop preload="auto"></audio>
+  <audio id="yay-audio" src="media/yay.mp3" preload="auto"></audio>
+
+  <!-- CENÁRIO DE FUNDO: CÉU, ARCO-ÍRIS, NUVENS E COLINAS PASTEL -->
+  <div class="sky-background">
+    <div class="rainbow-arc"></div>
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2"></div>
+    <div class="cloud cloud-3"></div>
+    <div class="star-decor star-d1">⭐</div>
+    <div class="star-decor star-d2">⭐</div>
+    <div class="star-decor star-d3">⭐</div>
+    <div class="star-decor star-d4">⭐</div>
+    <div class="star-decor star-d5">⭐</div>
+    <div class="hills-backdrop"></div>
+  </div>
 
   <!-- MODAL / TELA DE INTRODUÇÃO SATÍRICA -->
   <div id="intro-modal" class="modal-overlay">
     <div class="modal-card">
       <div class="modal-badge">🍼 100% LIBERADO PARA MENORES! 🍼</div>
+      <div class="intro-logo-wrap">
+        <img src="media/bebet.png" alt="Bebêt Logo" class="intro-logo">
+      </div>
       <h1 class="modal-title">Bebêt: Deixando a Ruína Financeira <span class="highlight-pink">Fofinha</span> ✨</h1>
       <div class="modal-body">
         <p>Nós, da <strong>Bebêt</strong>, acreditamos que <em>idade é apenas um número</em>! E nós amamos números! A proibição das bets para menores de idade é uma ideia dos políticos burocratas contra o crescimento econômico. Não existe idade melhor para se começar a apostar do que na infância! Precisamos respeitar a liberdade e não subestimar a cognição dos nossos pequenos!</p>
@@ -33,9 +57,11 @@
   <!-- MODAL DO EMPRÉSTIMO ITAÚ KIDS -->
   <div id="itau-modal" class="modal-overlay hidden">
     <div class="modal-card itau-card">
+      <div class="itau-banner-wrap">
+        <img src="media/itau.png" alt="Itaú Kids Empréstimo" class="itau-banner-img">
+      </div>
       <div class="itau-header">
-        <div class="itau-logo">🧡 Itaú <span class="itau-sub">Kids</span></div>
-        <span class="itau-badge">PRÉ-APROVADO!</span>
+        <span class="itau-badge">⚡ CRÉDITO PRÉ-APROVADO ⚡</span>
       </div>
       <h2>Ops! Ficou sem leitinho? 🍼💔</h2>
       <p class="itau-text">
@@ -48,210 +74,345 @@
       <div class="itau-motto">
         "Lembre-se: <strong>99% dos apostadores saem antes de fazerem uma bolada!</strong>"
       </div>
-      <button id="btn-accept-loan" class="btn-itau">Pegar Empréstimo & Continuar!</button>
+      <button id="btn-accept-loan" class="btn-itau">🧡 Pegar Empréstimo & Continuar!</button>
       <div class="itau-microprint">
         *CET de 2.450% a.a. Garantia: mamadeira, chupeta ortodôntica, herança dos avós e brinquedos favoritos penhorados automaticamente em caso de inadimplência superior a 24 horas.
       </div>
     </div>
   </div>
 
-  <!-- CONTAINER PRINCIPAL DO APP -->
-  <div class="app-container">
+  <!-- MODAL / DRAWER DO LABORATÓRIO DA RUÍNA (MÉTRICAS MATEMÁTICAS & CHART) -->
+  <div id="lab-modal" class="modal-overlay hidden">
+    <div class="modal-card lab-card">
+      <div class="lab-header">
+        <div class="lab-title-group">
+          <h2>📊 Laboratório da Ruína (IFES 2026)</h2>
+          <span class="lab-subtitle">Estatísticas empíricas em tempo real vs. Teoria matemática</span>
+        </div>
+        <button id="btn-close-lab" class="btn-close-circle" title="Fechar">✕</button>
+      </div>
+
+      <div class="lab-body">
+        <div class="metric-grid">
+          <div class="metric-box">
+            <span class="m-title">Total de Rodadas</span>
+            <span id="m-rounds" class="m-val">0</span>
+          </div>
+          <div class="metric-box">
+            <span class="m-title">Vitórias (Centro)</span>
+            <span id="m-wins" class="m-val win-color">0 (0.0%)</span>
+            <small class="m-ref">(Teórico: 4,0%)</small>
+          </div>
+          <div class="metric-box">
+            <span class="m-title">Derrotas</span>
+            <span id="m-losses" class="m-val loss-color">0 (0.0%)</span>
+            <small class="m-ref">(Teórico: 96,0%)</small>
+          </div>
+          <div class="metric-box">
+            <span class="m-title">RTP Observado</span>
+            <span id="m-rtp" class="m-val">0.00%</span>
+            <small class="m-ref">(Teórico: 84,0%)</small>
+          </div>
+          <div class="metric-box">
+            <span class="m-title">Lucro Médio (X̄)</span>
+            <span id="m-mean" class="m-val">0.00</span>
+            <small class="m-ref">(Teórico: -0,16)</small>
+          </div>
+          <div class="metric-box">
+            <span class="m-title">Desvio-Padrão (s)</span>
+            <span id="m-std" class="m-val">0.00</span>
+            <small class="m-ref">(Alta volatilidade)</small>
+          </div>
+        </div>
+
+        <div class="chart-wrapper">
+          <canvas id="balanceChart"></canvas>
+        </div>
+
+        <div class="lab-insights">
+          <div class="insight-pill">
+            💡 <strong>Falácia do Apostador:</strong> Cada giro tem exatamente 4% de chance, independente de quantas derrotas ocorreram.
+          </div>
+          <div class="insight-pill">
+            🏦 <strong>Vantagem da Casa:</strong> A Bebêt lucra em média 16 centavos por giro do bebê.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTAINER PRINCIPAL DO APP (ESTILO TABLET / CONSOLE INFANTIL) -->
+  <div class="app-window">
     
-    <!-- BARRA SUPERIOR -->
-    <header class="top-bar">
-      <div class="logo-area">
-        <div class="logo-icon">🍼👑</div>
-        <div class="logo-texts">
-          <span class="logo-main">Bebêt</span>
-          <span class="logo-tag">A Bet Para Bebês!</span>
+    <!-- BARRA SUPERIOR (HEADER) -->
+    <header class="top-nav-bar">
+      <!-- LOGO BEBÊT -->
+      <div class="brand-container">
+        <img src="media/bebet.png" alt="Bebêt - A Bet Para Bebês" class="nav-brand-logo">
+      </div>
+
+      <!-- STATUS CENTRAL: SALDO DO JOGADOR & LUCRO DA CASA -->
+      <div class="header-pills-row">
+        <div class="hud-pill balance-hud">
+          <div class="hud-coin">🪙</div>
+          <div class="hud-text-group">
+            <span class="hud-label">Seu saldo</span>
+            <span id="player-balance" class="hud-value">100</span>
+          </div>
+        </div>
+
+        <div class="hud-pill profit-hud">
+          <div class="hud-coin">🏦</div>
+          <div class="hud-text-group">
+            <span class="hud-label">Lucro Bebêt</span>
+            <span id="casino-profit" class="hud-value casino-color">+0</span>
+          </div>
         </div>
       </div>
 
-      <div class="top-stats">
-        <div class="stat-pill balance-pill">
-          <span class="coin-icon">🪙</span>
-          <div class="stat-info">
-            <span class="stat-label">Seu Saldo</span>
-            <span id="player-balance" class="stat-val">100</span>
+      <!-- PERFIL DO BEBÊ & CONTROLES -->
+      <div class="header-right-group">
+        <div class="baby-profile-card">
+          <div class="baby-avatar">👶👑</div>
+          <div class="baby-info">
+            <span class="baby-name">Pequeno Apostador</span>
+            <div class="baby-bar-wrap">
+              <span class="baby-level-txt">Nível 1 (Ruína)</span>
+              <div class="baby-progress-track">
+                <div class="baby-progress-fill" style="width: 25%;"></div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="stat-pill casino-pill">
-          <span class="coin-icon">🏦</span>
-          <div class="stat-info">
-            <span class="stat-label">Lucro da Bebêt</span>
-            <span id="casino-profit" class="stat-val profit-val">0</span>
-          </div>
-        </div>
-
-        <button id="btn-sound" class="btn-icon" title="Ligar/Desligar Música e Efeitos">
+        <button id="btn-sound" class="btn-round-nav" title="Ligar/Desligar Música e Efeitos">
           <span id="sound-icon">🔊</span>
+        </button>
+
+        <button id="btn-home" class="btn-round-nav" title="Sobre a Bebêt">
+          <span>🏠</span>
         </button>
       </div>
     </header>
 
-    <!-- ÁREA CENTRAL DE JOGO -->
-    <main class="main-content">
+    <!-- CORPO DO APP: SIDEBAR + MESA PRINCIPAL DE JOGO -->
+    <div class="app-body-layout">
       
-      <!-- PAINEL ESQUERDO: A MÁQUINA DE CAÇA-NÍQUEIS INFANTIL -->
-      <section class="game-area">
-        
-        <div class="slot-machine-wrapper">
-          <div class="slot-machine-header">
-            <div class="crown-badge">👑</div>
-            <h2>Caça-Níqueis da Chupeta</h2>
-            <p>Gire os rolos e tente não perder a mesada!</p>
-          </div>
+      <!-- SIDEBAR LATERAL ESQUERDA -->
+      <aside class="sidebar-panel">
+        <nav class="side-menu">
+          <button class="nav-item active" id="menu-jogos">
+            <span class="nav-icon">🎮</span>
+            <span class="nav-text">Jogos</span>
+          </button>
+          <button class="nav-item" id="menu-lab">
+            <span class="nav-icon">📊</span>
+            <span class="nav-text">Laboratório</span>
+          </button>
+          <button class="nav-item" id="menu-itau">
+            <span class="nav-icon">🧡</span>
+            <span class="nav-text">Itaú Kids</span>
+          </button>
+          <button class="nav-item" id="menu-sobre">
+            <span class="nav-icon">🍼</span>
+            <span class="nav-text">Manifesto</span>
+          </button>
+        </nav>
 
-          <div class="machine-housing">
-            <!-- Indicador lateral da linha central -->
-            <div class="payline-indicator left-indicator">👉</div>
-
-            <!-- TABULEIRO 3x3 -->
-            <div class="slot-reels-container">
-              <!-- Rolo 1 -->
-              <div class="reel" id="reel-1">
-                <div class="reel-cell top-cell" id="r1-top">A</div>
-                <div class="reel-cell center-cell" id="r1-mid">B</div>
-                <div class="reel-cell bottom-cell" id="r1-bot">C</div>
-              </div>
-              <!-- Rolo 2 -->
-              <div class="reel" id="reel-2">
-                <div class="reel-cell top-cell" id="r2-top">C</div>
-                <div class="reel-cell center-cell" id="r2-mid">D</div>
-                <div class="reel-cell bottom-cell" id="r2-bot">E</div>
-              </div>
-              <!-- Rolo 3 -->
-              <div class="reel" id="reel-3">
-                <div class="reel-cell top-cell" id="r3-top">E</div>
-                <div class="reel-cell center-cell" id="r3-mid">A</div>
-                <div class="reel-cell bottom-cell" id="r3-bot">B</div>
+        <!-- MASCOTE COELHINHO COM BALÃO DE FALA -->
+        <div class="bunny-mascot-container">
+          <div class="bunny-bubble" id="bunny-quote">Boa sorte! 💕</div>
+          <div class="bunny-illustration">
+            <div class="bunny-ears">
+              <div class="ear ear-left"><div class="ear-inner"></div></div>
+              <div class="ear ear-right"><div class="ear-inner"></div></div>
+            </div>
+            <div class="bunny-face">
+              <div class="bunny-eye eye-left"></div>
+              <div class="bunny-eye eye-right"></div>
+              <div class="bunny-nose"></div>
+              <div class="bunny-cheeks">
+                <div class="cheek cheek-l"></div>
+                <div class="cheek cheek-r"></div>
               </div>
             </div>
-
-            <div class="payline-indicator right-indicator">👈</div>
-          </div>
-
-          <!-- BANNER DE FEEDBACK DA RODADA -->
-          <div id="round-message" class="round-message neutral">
-            Aperte em Girar para arriscar 1 crédito!
-          </div>
-
-          <!-- PAINEL DE CONTROLE DE APOSTA E BOTÃO GIRAR -->
-          <div class="controls-panel">
-            <div class="bet-info-card">
-              <span class="bet-label">Custo Fixo:</span>
-              <span class="bet-value">🪙 1 Crédito</span>
-            </div>
-
-            <button id="btn-spin" class="btn-spin">
-              <span class="btn-spin-text">GIRAR! 🎲</span>
-            </button>
-
-            <button id="btn-auto" class="btn-auto">Auto (10x)</button>
-          </div>
-
-          <!-- TABELA DE PAGAMENTOS OFICIAL (REGRAS DO IFES) -->
-          <div class="payout-table-card">
-            <h3>⭐ Prêmios da Linha Central ⭐</h3>
-            <div class="payout-grid">
-              <div class="payout-item">
-                <div class="symbol-icon">⭐ ⭐ ⭐</div>
-                <div class="symbol-code">A-A-A</div>
-                <div class="symbol-prize">+5 créditos</div>
-              </div>
-              <div class="payout-item">
-                <div class="symbol-icon">🍒 🍒 🍒</div>
-                <div class="symbol-code">B-B-B</div>
-                <div class="symbol-prize">+10 créditos</div>
-              </div>
-              <div class="payout-item">
-                <div class="symbol-icon">💎 💎 💎</div>
-                <div class="symbol-code">C-C-C</div>
-                <div class="symbol-prize">+15 créditos</div>
-              </div>
-              <div class="payout-item">
-                <div class="symbol-icon">🧸 🧸 🧸</div>
-                <div class="symbol-code">D-D-D</div>
-                <div class="symbol-prize">+25 créditos</div>
-              </div>
-              <div class="payout-item jackpot-item">
-                <div class="symbol-icon">👑 👑 👑</div>
-                <div class="symbol-code">E-E-E</div>
-                <div class="symbol-prize highlight-prize">+50 créditos!</div>
-              </div>
-            </div>
-            <div class="payout-footer-note">Qualquer outra combinação central paga <strong>0</strong> (perda líquida de 1 crédito).</div>
+            <div class="bunny-star-held">⭐</div>
           </div>
         </div>
-
-      </section>
-
-      <!-- PAINEL DIREITO: DASHBOARD ESTATÍSTICO COMPLETO -->
-      <aside class="stats-panel">
-        
-        <div class="card stat-summary-card">
-          <h3>📊 O Laboratório da Ruína</h3>
-          <p class="subtitle">Estatísticas empíricas em tempo real da sua sessão:</p>
-          
-          <div class="metric-grid">
-            <div class="metric-box">
-              <span class="m-title">Total Rodadas</span>
-              <span id="m-rounds" class="m-val">0</span>
-            </div>
-            <div class="metric-box">
-              <span class="m-title">Vitórias</span>
-              <span id="m-wins" class="m-val win-color">0 (0%)</span>
-            </div>
-            <div class="metric-box">
-              <span class="m-title">Derrotas</span>
-              <span id="m-losses" class="m-val loss-color">0 (0%)</span>
-            </div>
-            <div class="metric-box">
-              <span class="m-title">RTP Observado</span>
-              <span id="m-rtp" class="m-val">0%</span>
-              <small class="m-ref">(Teórico: 84,0%)</small>
-            </div>
-            <div class="metric-box">
-              <span class="m-title">Lucro Médio (X̄)</span>
-              <span id="m-mean" class="m-val">0.00</span>
-              <small class="m-ref">(Teórico: -0,16)</small>
-            </div>
-            <div class="metric-box">
-              <span class="m-title">Desvio-Padrão (s)</span>
-              <span id="m-std" class="m-val">0.00</span>
-              <small class="m-ref">(Alta volatilidade)</small>
-            </div>
-          </div>
-        </div>
-
-        <!-- GRÁFICO DINÂMICO DE SALDO -->
-        <div class="card chart-card">
-          <h3>📉 Trajetória do Seu Saldo</h3>
-          <div class="chart-wrapper">
-            <canvas id="balanceChart"></canvas>
-          </div>
-          <div class="chart-hint">Repare como os picos esparsos apenas adiam a tendência de ruína!</div>
-        </div>
-
-        <!-- BOX DIDÁTICO / SATÍRICO -->
-        <div class="card lesson-card">
-          <h3>🧠 Lição de Casa do Bebê:</h3>
-          <ul class="lesson-list">
-            <li><strong>Falácia do Apostador:</strong> Perder 10 seguidas não aumenta sua chance na próxima (a chance é sempre 4%).</li>
-            <li><strong>Viés do Sobrevivente:</strong> O coleguinha que ganhou 50 créditos comemora no berçário, enquanto 67% faliram em silêncio.</li>
-            <li><strong>A Casa Sempre Vence:</strong> A cada rodada, a Bebêt abocanha em média 16 centavos de crédito do seu bolso!</li>
-          </ul>
-        </div>
-
       </aside>
 
-    </main>
+      <!-- ÁREA CENTRAL DO JOGO -->
+      <main class="game-board-area">
+        
+        <!-- TÍTULO DA MÁQUINA ESTILO PÍLULA ROXA -->
+        <div class="game-title-pill">
+          <span class="title-star">⭐</span>
+          <div class="title-texts">
+            <h1>Caça-Níqueis</h1>
+            <p>Gire os rolos e tente ganhar!</p>
+          </div>
+          <span class="title-star">⭐</span>
+        </div>
 
-    <!-- RODAPÉ SATÍRICO -->
-    <footer class="footer">
-      Bebêt S.A. © 2026 — Autorizado pela Associação Fictícia de Chupetas e Caça-Níqueis. Simulador estritamente acadêmico sem valor monetário real.
+        <!-- MÁQUINA DE CAÇA-NÍQUEIS + ALAVANCA MECÂNICA + PAINEL DE CONTROLE -->
+        <div class="machine-and-controls-grid">
+          
+          <!-- O GABINETE DA MÁQUINA ROSA (MINIWIN STYLE) -->
+          <div class="machine-housing-card">
+            
+            <!-- COROA DOURADA SUPERIOR COM CRISTAIS -->
+            <div class="machine-golden-crown">
+              <span class="crown-jewel cj-1">✨</span>
+              <span class="crown-symbol">👑</span>
+              <span class="crown-jewel cj-2">✨</span>
+            </div>
+
+            <!-- QUADRO DOS ROLOS 3x3 -->
+            <div class="machine-screen-bezel">
+              
+              <!-- INDICADORES DA LINHA CENTRAL (PAYLINE) -->
+              <div class="payline-bracket bracket-left">👉</div>
+
+              <div class="reels-viewport">
+                <!-- Rolo 1 -->
+                <div class="reel-column" id="reel-1">
+                  <div class="reel-cell top-row" id="r1-top"><div class="sym-box">⭐</div></div>
+                  <div class="reel-cell mid-row" id="r1-mid"><div class="sym-box">🍒</div></div>
+                  <div class="reel-cell bot-row" id="r1-bot"><div class="sym-box">💎</div></div>
+                </div>
+
+                <!-- Divisória suave -->
+                <div class="reel-separator"></div>
+
+                <!-- Rolo 2 -->
+                <div class="reel-column" id="reel-2">
+                  <div class="reel-cell top-row" id="r2-top"><div class="sym-box">🧸</div></div>
+                  <div class="reel-cell mid-row" id="r2-mid"><div class="sym-box">🍒</div></div>
+                  <div class="reel-cell bot-row" id="r2-bot"><div class="sym-box">👑</div></div>
+                </div>
+
+                <!-- Divisória suave -->
+                <div class="reel-separator"></div>
+
+                <!-- Rolo 3 -->
+                <div class="reel-column" id="reel-3">
+                  <div class="reel-cell top-row" id="r3-top"><div class="sym-box">⭐</div></div>
+                  <div class="reel-cell mid-row" id="r3-mid"><div class="sym-box">🍒</div></div>
+                  <div class="reel-cell bot-row" id="r3-bot"><div class="sym-box">🍓</div></div>
+                </div>
+              </div>
+
+              <div class="payline-bracket bracket-right">👈</div>
+            </div>
+
+            <!-- ALAVANCA FÍSICA LATERAL COM BOLA ROSA -->
+            <div class="slot-lever-assembly" id="slot-lever" title="Puxe a alavanca!">
+              <div class="lever-pivot"></div>
+              <div class="lever-rod"></div>
+              <div class="lever-knob"></div>
+            </div>
+
+          </div>
+
+          <!-- PAINEL LATERAL DE APOSTA & BOTÃO GIRAR -->
+          <div class="side-controls-column">
+            
+            <div class="bet-action-card">
+              <!-- VALOR DA APOSTA FIXA -->
+              <div class="bet-amount-box">
+                <div class="bet-coin-icon">🪙</div>
+                <div class="bet-details">
+                  <span class="bet-title">Aposta</span>
+                  <div class="bet-selector-row">
+                    <span class="bet-arrow-btn">‹</span>
+                    <span class="bet-num">1</span>
+                    <span class="bet-arrow-btn">›</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- BOTÃO GIRAR (VERDE JUCY 3D) -->
+              <button id="btn-spin" class="btn-spin-large">
+                <span class="btn-play-icon">▶</span>
+                <span class="btn-spin-label">Girar</span>
+              </button>
+
+              <!-- MODO AUTO -->
+              <button id="btn-auto" class="btn-auto-fast">
+                ⚡ Auto (10x)
+              </button>
+            </div>
+
+            <!-- MINI CARD "COMO FUNCIONA?" -->
+            <div class="info-help-card">
+              <div class="info-help-header">
+                <span class="info-icon">💡</span>
+                <strong>Como funciona?</strong>
+              </div>
+              <p>Gire os rolos e tente combinar <strong>3 símbolos iguais</strong> na linha do meio para ganhar moedas!</p>
+              <div class="quick-stat-bar">
+                <span>RTP: <strong id="quick-rtp">0%</strong></span>
+                <span>Rodadas: <strong id="quick-rounds">0</strong></span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- MENSAGEM DINÂMICA DA RODADA -->
+        <div id="round-message" class="round-status-banner neutral">
+          Aperte em <strong>Girar</strong> para arriscar 1 crédito! 🍼🎲
+        </div>
+
+        <!-- PRÊMIOS POSSÍVEIS (CARD INFERIOR SEGUINDO A REFERÊNCIA) -->
+        <section class="payout-showcase-card">
+          <div class="showcase-header">
+            <span class="showcase-star">⭐</span>
+            <span class="showcase-title">Prêmios possíveis (Linha Central)</span>
+            <span class="showcase-star">⭐</span>
+          </div>
+
+          <div class="prizes-horizontal-row">
+            <div class="prize-slot">
+              <div class="prize-symbol-art">⭐</div>
+              <span class="prize-coins">5 moedas</span>
+              <small class="prize-math">(Lucro +4)</small>
+            </div>
+
+            <div class="prize-slot">
+              <div class="prize-symbol-art">🍒</div>
+              <span class="prize-coins">10 moedas</span>
+              <small class="prize-math">(Lucro +9)</small>
+            </div>
+
+            <div class="prize-slot">
+              <div class="prize-symbol-art">💎</div>
+              <span class="prize-coins">15 moedas</span>
+              <small class="prize-math">(Lucro +14)</small>
+            </div>
+
+            <div class="prize-slot">
+              <div class="prize-symbol-art">🧸</div>
+              <span class="prize-coins">25 moedas</span>
+              <small class="prize-math">(Lucro +24)</small>
+            </div>
+
+            <div class="prize-slot jackpot-slot">
+              <div class="prize-symbol-art crown-art">👑</div>
+              <span class="prize-coins jackpot-coins">50 moedas</span>
+              <small class="prize-math">(Lucro +49)</small>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+    </div>
+
+    <!-- RODAPÉ COMPACTO -->
+    <footer class="app-footer">
+      Bebêt S.A. © 2026 — Simulador estritamente acadêmico (IFES). Nenhum valor financeiro real é apostado.
     </footer>
 
   </div>
